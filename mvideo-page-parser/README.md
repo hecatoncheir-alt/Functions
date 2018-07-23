@@ -1,4 +1,4 @@
-## Mvideo page parser
+# Mvideo page parser
 
 Do not forget change image in _**mvideo-page-parser.yaml**_:
 
@@ -11,7 +11,7 @@ to
 image: some-repository/mvideo-page-parser
 ```
 
-### For build user [faas-cli](https://github.com/openfaas/faas-cli):
+## For build user [faas-cli](https://github.com/openfaas/faas-cli):
 
 
 In **_Dockerfile_** version of Go can be changed to: 
@@ -32,7 +32,7 @@ Then push image to docker registry:
 docker push some-repository/mvideo-page-parser
 ```
 
-### For deploy call faas-cli deploy.
+## For deploy call faas-cli deploy.
 Use **--gateway** if you have gateway on another server:
 
 ```
