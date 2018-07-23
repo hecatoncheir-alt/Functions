@@ -1,0 +1,9 @@
+provider:
+  name: faas
+  gateway: http://127.0.0.1:8080
+
+functions:
+  mvideo-page-parser:
+    lang: go
+    handler: ./mvideo-page-parser
+    image: mvideo-page-parser
