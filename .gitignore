@@ -72,3 +72,8 @@ fabric.properties
 template
 build
 
+mvideo-page-parser/Gopkg.lock
+mvideo-page-parser/vendor/
+
+mvideo-pages-count-parser/Gopkg.lock
+mvideo-pages-count-parser/vendor/
