@@ -3,18 +3,17 @@ package function
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hecatoncheir/Configuration"
+	"github.com/hecatoncheir/Storage"
 )
 
 type Request struct {
-	CompanyName string
-	APIVersion  string
-	Language    string
+	Language        string
+	CompanyName     string
+	DatabaseGateway string
 }
 
 type ErrorResponse struct {
 	Error string
-	APIVersion string
 	Data  ErrorData
 }
 
@@ -25,8 +24,6 @@ type ErrorData struct {
 
 // Handle a serverless request
 func Handle(req []byte) string {
-	config := configuration.New()
-
 	request := Request{}
 
 	err := json.Unmarshal(req, &request)
@@ -38,10 +35,9 @@ func Handle(req []byte) string {
 
 		errorResponse := ErrorResponse{
 			Error: "Unmarshal request error",
-			APIVersion: config.APIVersion,
 			Data: ErrorData{
 				Request: string(req),
-				Error: err.Error()}}
+				Error:   err.Error()}}
 
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
@@ -51,5 +47,48 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	return fmt.Sprintf("Hello, Go. You said: %s", string(req))
+	executor := Executor{Store: storage.New(request.DatabaseGateway)}
+	companies, err := executor.ReadCompaniesByName(request.CompanyName, request.Language, request.DatabaseGateway)
+	if err != nil {
+		warning := fmt.Sprintf(
+			"ReadCompaniesByName error: %v", err)
+
+		fmt.Println(warning)
+
+		errorResponse := ErrorResponse{
+			Error: "ReadCompaniesByName error",
+			Data: ErrorData{
+				Request: string(req),
+				Error:   err.Error()}}
+
+		response, err := json.Marshal(errorResponse)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		return string(response)
+	}
+
+	encodedCompanies, err := json.Marshal(companies)
+	if err != nil {
+		warning := fmt.Sprintf(
+			"Unmarshal companies error: %v. Error: %v", companies, err)
+
+		fmt.Println(warning)
+
+		errorResponse := ErrorResponse{
+			Error: "Unmarshal companies error",
+			Data: ErrorData{
+				Request: string(req),
+				Error:   err.Error()}}
+
+		response, err := json.Marshal(errorResponse)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		return string(response)
+	}
+
+	return string(encodedCompanies)
 }
