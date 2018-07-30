@@ -1,16 +1,26 @@
 package function
 
 import (
-	"fmt"
-	"errors"
-	"github.com/hecatoncheir/Configuration"
-	"github.com/hecatoncheir/Storage"
 	"encoding/json"
+	"fmt"
+	"github.com/hecatoncheir/Storage"
 )
 
 type Request struct {
-	Company  storage.Company
-	Language string
+	Language        string
+	DatabaseGateway string
+	FAASGateway     string
+	Company         storage.Company
+}
+
+type ErrorResponse struct {
+	Error string
+	Data  ErrorData
+}
+
+type ErrorData struct {
+	Error   string
+	Request string
 }
 
 // Handle a serverless request
@@ -21,28 +31,68 @@ func Handle(req []byte) string {
 	if err != nil {
 		warning := fmt.Sprintf(
 			"Unmarshal request error: %v. Error: %v", request, err)
+
 		fmt.Println(warning)
+
+		errorResponse := ErrorResponse{
+			Error: "Unmarshal request error",
+			Data: ErrorData{
+				Request: string(req),
+				Error:   err.Error()}}
+
+		response, err := json.Marshal(errorResponse)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		return string(response)
 	}
 
+	executor := Executor{
+		Store:     storage.New(request.DatabaseGateway),
+		Functions: FAASFunctions{FAASGateway: request.FAASGateway}}
 
-	return fmt.Sprintf("Hello, Go. You said: %s", string(req))
-}
+	createdCompany, err := executor.CreateCompany(request.Company, request.Language, request.DatabaseGateway)
+	if err != nil {
+		warning := fmt.Sprintf(
+			"CreateCompany error: %v", err)
 
-var (
-	// ErrCompaniesByNameNotFound means than the companies does not exist in database
-	ErrCompaniesByNameNotFound = errors.New("companies by name not found")
+		fmt.Println(warning)
 
-	// ErrCompanyCanNotBeCreated means that the company can't be added to database
-	ErrCompanyCanNotBeCreated = errors.New("company can't be created")
+		errorResponse := ErrorResponse{
+			Error: "CreateCompany error",
+			Data: ErrorData{
+				Request: string(req),
+				Error:   err.Error()}}
 
-	// ErrCompanyAlreadyExist means that the company is in the database already
-	ErrCompanyAlreadyExist = errors.New("company already exist")
-)
+		response, err := json.Marshal(errorResponse)
+		if err != nil {
+			fmt.Println(err)
+		}
 
-func CreateCompany(company storage.Company, language string) (storage.Company, error) {
+		return string(response)
+	}
 
-	config := configuration.New()
-	store := storage.New(config.Production.Database.Host, config.Production.Database.Port)
-	store.Client.NewTxn()
+	encodedCompanies, err := json.Marshal(createdCompany)
+	if err != nil {
+		warning := fmt.Sprintf(
+			"Unmarshal company error: %v. Error: %v", createdCompany, err)
 
+		fmt.Println(warning)
+
+		errorResponse := ErrorResponse{
+			Error: "Unmarshal createdCompany error",
+			Data: ErrorData{
+				Request: string(req),
+				Error:   err.Error()}}
+
+		response, err := json.Marshal(errorResponse)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		return string(response)
+	}
+
+	return string(encodedCompanies)
 }
