@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/hecatoncheir/Storage"
+	"log"
+	"os"
 	"text/template"
 )
 
@@ -15,6 +17,8 @@ type Storage interface {
 type Executor struct {
 	Store Storage
 }
+
+var logger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
 
 var (
 	// ErrCompaniesByNameCanNotBeFound means that the companies can't be found in database
@@ -101,17 +105,20 @@ func (executor *Executor) ReadCompaniesByName(companyName, language, databaseGat
 			}`)
 
 	if err != nil {
+		logger.Println(err)
 		return nil, ErrCompaniesByNameCanNotBeFound
 	}
 
 	queryBuf := bytes.Buffer{}
 	err = queryTemplate.Execute(&queryBuf, variables)
 	if err != nil {
+		logger.Println(err)
 		return nil, err
 	}
 
 	response, err := executor.Store.Query(queryBuf.String())
 	if err != nil {
+		logger.Println(err)
 		return nil, ErrCompaniesByNameCanNotBeFound
 	}
 
@@ -122,10 +129,12 @@ func (executor *Executor) ReadCompaniesByName(companyName, language, databaseGat
 	var foundedCompanies companiesInStorage
 	err = json.Unmarshal(response, &foundedCompanies)
 	if err != nil {
+		logger.Println(err)
 		return nil, ErrCompaniesByNameCanNotBeFound
 	}
 
 	if len(foundedCompanies.AllCompaniesFoundedByName) == 0 {
+		logger.Println(ErrCompaniesByNameNotFound)
 		return nil, ErrCompaniesByNameNotFound
 	}
 
