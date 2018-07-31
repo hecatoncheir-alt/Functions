@@ -12,7 +12,7 @@ type Storage interface {
 }
 
 type Functions interface {
-	CompaniesReadByName(string, string) []storage.Company
+	CompaniesReadByName(string, string, string) []storage.Company
 }
 
 type Executor struct {
@@ -20,7 +20,7 @@ type Executor struct {
 	Functions Functions
 }
 
-var logger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
+var ExecutorLogger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
 
 var (
 	// ErrCompanyAlreadyExist means that the company is in the database already
@@ -28,8 +28,8 @@ var (
 )
 
 // ReadCompaniesByName is a method for get all nodes by categories name
-func (executor *Executor) CreateCompany(company storage.Company, language string) (storage.Company, error) {
-	existsCompanies := executor.Functions.CompaniesReadByName(company.Name, language)
+func (executor *Executor) CreateCompany(company storage.Company, language, DatabaseGateway string) (storage.Company, error) {
+	existsCompanies := executor.Functions.CompaniesReadByName(company.Name, language, DatabaseGateway)
 
 	if existsCompanies != nil && len(existsCompanies) > 0 {
 		return existsCompanies[0], ErrCompanyAlreadyExist
