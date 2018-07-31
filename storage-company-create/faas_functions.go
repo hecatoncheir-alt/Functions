@@ -1,12 +1,13 @@
 package function
 
 import (
-	"fmt"
-	"github.com/hecatoncheir/Storage"
-	"net/http"
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"github.com/hecatoncheir/Storage"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -24,15 +25,37 @@ func (functions FAASFunctions) CompaniesReadByName(companyName, language, Databa
 		CompanyName     string
 		DatabaseGateway string
 	}{
-		Language:language,
-		CompanyName:companyName,
-		DatabaseGateway:DatabaseGateway	}
+		Language:        language,
+		CompanyName:     companyName,
+		DatabaseGateway: DatabaseGateway}
 
-	encodedBody,err:=json.Marshal(body)
+	encodedBody, err := json.Marshal(body)
 	if err != nil {
 		FAASLogger.Println(err)
+		return nil
 	}
 
-	http.Post(functionPath, "application/json", bytes.NewBuffer(encodedBody))
-	return []storage.Company{}
+	response, err := http.Post(functionPath, "application/json", bytes.NewBuffer(encodedBody))
+	if err != nil {
+		FAASLogger.Println(err)
+		return nil
+	}
+
+	defer response.Body.Close()
+
+	decodedResponse, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		FAASLogger.Println(err)
+		return nil
+	}
+
+	var existCompanies []storage.Company
+
+	err = json.Unmarshal(decodedResponse, &existCompanies)
+	if err != nil {
+		FAASLogger.Println(err)
+		return nil
+	}
+
+	return existCompanies
 }
