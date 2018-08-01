@@ -18,7 +18,7 @@ type FAASFunctions struct {
 }
 
 func (functions FAASFunctions) CompaniesReadByName(companyName, language, DatabaseGateway string) []storage.Company {
-	functionPath := fmt.Sprintf("%v/%v/%v", functions.FAASGateway, "functino", "storage-company-read-by-name")
+	functionPath := fmt.Sprintf("%v/%v/%v", functions.FAASGateway, "function", "storage-company-read-by-name")
 
 	body := struct {
 		Language        string

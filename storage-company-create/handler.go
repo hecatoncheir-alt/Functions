@@ -73,15 +73,15 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	encodedCompanies, err := json.Marshal(createdCompany)
+	encodedCompany, err := json.Marshal(createdCompany)
 	if err != nil {
 		warning := fmt.Sprintf(
-			"Unmarshal company error: %v. Error: %v", createdCompany, err)
+			"Marshal company error: %v. Error: %v", createdCompany, err)
 
 		fmt.Println(warning)
 
 		errorResponse := ErrorResponse{
-			Error: "Unmarshal createdCompany error",
+			Error: "Marshal createdCompany error",
 			Data: ErrorData{
 				Request: string(req),
 				Error:   err.Error()}}
@@ -94,5 +94,5 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	return string(encodedCompanies)
+	return string(encodedCompany)
 }

@@ -34,4 +34,6 @@ func (executor *Executor) CreateCompany(company storage.Company, language, Datab
 	if existsCompanies != nil && len(existsCompanies) > 0 {
 		return existsCompanies[0], ErrCompanyAlreadyExist
 	}
+
+	return storage.Company{}, nil
 }
