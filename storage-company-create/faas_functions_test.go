@@ -53,8 +53,14 @@ func TestFAASFunctions_CompaniesReadByName(t *testing.T) {
 				IsActive: true}}
 
 		encodedExistedCompaniesInStorage, err := json.Marshal(existedCompaniesInStorage)
+		if err != nil {
+			t.Error(err.Error())
+		}
 
-		io.WriteString(w, string(encodedExistedCompaniesInStorage))
+		_, err = io.WriteString(w, string(encodedExistedCompaniesInStorage))
+		if err != nil {
+			t.Error(err.Error())
+		}
 	})
 
 	testServer := httptest.NewServer(testHandler)
