@@ -1,32 +1,20 @@
 package function
 
 import (
+	"encoding/json"
+	"github.com/hecatoncheir/Storage"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"io/ioutil"
-	"encoding/json"
 )
 
 func TestFAASFunctions_CompaniesReadByName(t *testing.T) {
 
-	responseBody := `
-		[
-			{
-				 "uid": "0x12"
-				 "companyName":"Test company",
-				 "companyIri":"/",
-				 "companyIsActive":true
-		  	},
-			{  
-				 "uid":"0x13",
-				 "companyName":"Other test company",
-				 "companyIri":"/",
-				 "companyIsActive":true
-			}
-		]
-	`
+	LanguageForTest := "ru"
+	CompanyNameForTest := "TestCompanyName"
+	DatabaseGatewayForTest := "http://TestDatabaseGateway"
 
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		encodedBody, err := ioutil.ReadAll(r.Body)
@@ -40,20 +28,41 @@ func TestFAASFunctions_CompaniesReadByName(t *testing.T) {
 			t.Errorf("Unmarshal body of request error: %v", err)
 		}
 
-		if responseBodyEncoded[""] != ""{
-
+		if responseBodyEncoded["Language"] != LanguageForTest {
+			t.Fatalf("Expected: \"%v\", but got: %v", LanguageForTest, responseBodyEncoded["Language"])
 		}
 
+		if responseBodyEncoded["CompanyName"] != CompanyNameForTest {
+			t.Fatalf("Expected: \"%v\", but got: %v", CompanyNameForTest, responseBodyEncoded["Language"])
+		}
 
+		if responseBodyEncoded["DatabaseGateway"] != DatabaseGatewayForTest {
+			t.Fatalf("Expected: \"%v\", but got: %v", DatabaseGatewayForTest, responseBodyEncoded["DatabaseGateway"])
+		}
 
-		io.WriteString(w, responseBody)
+		existedCompaniesInStorage := []storage.Company{
+			{
+				ID:       "0x12",
+				IRI:      "/",
+				Name:     "Test company name",
+				IsActive: true},
+			{
+				ID:       "0x13",
+				IRI:      "/",
+				Name:     "Other test company name",
+				IsActive: true}}
+
+		encodedExistedCompaniesInStorage, err := json.Marshal(existedCompaniesInStorage)
+
+		io.WriteString(w, string(encodedExistedCompaniesInStorage))
 	})
 
 	testServer := httptest.NewServer(testHandler)
 	defer testServer.Close()
 
 	faas := FAASFunctions{FAASGateway: testServer.URL}
-	companies := faas.CompaniesReadByName("TestCompanyName", "ru", "")
+	companies := faas.CompaniesReadByName(CompanyNameForTest, LanguageForTest, DatabaseGatewayForTest)
+
 	if len(companies) < 1 {
 		t.Fatalf("Expect more companies that 1, but got: %v", len(companies))
 	}
