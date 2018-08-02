@@ -28,12 +28,17 @@ var (
 )
 
 // ReadCompaniesByName is a method for get all nodes by categories name
-func (executor *Executor) CreateCompany(company storage.Company, language, DatabaseGateway string) (storage.Company, error) {
+func (executor *Executor) CreateCompany(
+	company storage.Company, language, DatabaseGateway string) (storage.Company, error) {
+
 	existsCompanies := executor.Functions.CompaniesReadByName(company.Name, language, DatabaseGateway)
 
-	if existsCompanies != nil && len(existsCompanies) > 0 {
+	if len(existsCompanies) > 0 {
+		ExecutorLogger.Printf("Company with name: %v exist: %v", company.Name, existsCompanies[0])
 		return existsCompanies[0], ErrCompanyAlreadyExist
 	}
+
+	// TODO
 
 	return storage.Company{}, nil
 }
