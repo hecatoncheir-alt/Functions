@@ -1,6 +1,7 @@
 package function
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/hecatoncheir/Storage"
 	"log"
@@ -9,6 +10,7 @@ import (
 
 type Storage interface {
 	Query(string) ([]byte, error)
+	Mutate([]byte) (string, error)
 }
 
 type Functions interface {
@@ -23,6 +25,9 @@ type Executor struct {
 var ExecutorLogger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
 
 var (
+	// ErrCompanyCanNotBeCreated means that the company can't be added to database
+	ErrCompanyCanNotBeCreated = errors.New("company can't be created")
+
 	// ErrCompanyAlreadyExist means that the company is in the database already
 	ErrCompanyAlreadyExist = errors.New("company already exist")
 )
@@ -38,7 +43,20 @@ func (executor *Executor) CreateCompany(
 		return existsCompanies[0], ErrCompanyAlreadyExist
 	}
 
-	// TODO
+	company.IsActive = true
+
+	encodedCompany, err := json.Marshal(company)
+	if err != nil {
+		return company, ErrCompanyCanNotBeCreated
+	}
+
+	_, err = executor.Store.Mutate(encodedCompany)
+	if err != nil {
+		return company, ErrCompanyCanNotBeCreated
+	}
+
+	//TODO add language of company name
+	//forCompanyNamePredicate := fmt.Sprintf(`<%s> <companyName> %s .`, companyID, "\""+name+"\""+"@"+language)
 
 	return storage.Company{}, nil
 }
