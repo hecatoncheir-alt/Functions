@@ -11,6 +11,7 @@ import (
 type Storage interface {
 	Query(string) ([]byte, error)
 	Mutate([]byte) (string, error)
+	SetNQuads(string, string, string) error
 }
 
 type Functions interface {
@@ -55,8 +56,10 @@ func (executor *Executor) CreateCompany(
 		return company, ErrCompanyCanNotBeCreated
 	}
 
-	//TODO add language of company name
-	//forCompanyNamePredicate := fmt.Sprintf(`<%s> <companyName> %s .`, companyID, "\""+name+"\""+"@"+language)
+	err = executor.Store.SetNQuads(company.ID, "companyName", "\""+company.Name+"\""+"@"+language)
+	if err != nil {
+		return company, ErrCompanyCanNotBeCreated
+	}
 
 	return storage.Company{}, nil
 }
