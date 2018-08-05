@@ -10,7 +10,7 @@ func TestCompanyCanBeReadByName(t *testing.T) {
 
 	executor := Executor{Store: MockStore{}}
 
-	companiesFromStore, err := executor.ReadCompaniesByName(nameOfTestedCompany, "ru", "")
+	companiesFromStore, err := executor.ReadCompaniesByName(nameOfTestedCompany, "ru")
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
@@ -32,7 +32,7 @@ func TestCompanyCanBeReadByNameWithError(t *testing.T) {
 	nameOfTestedCompany := "Test company"
 
 	executor := Executor{Store: ErrorMockStore{}}
-	_, err := executor.ReadCompaniesByName(nameOfTestedCompany, "ru", "")
+	_, err := executor.ReadCompaniesByName(nameOfTestedCompany, "ru")
 	if err != ErrCompaniesByNameCanNotBeFound {
 		t.Fatalf(err.Error())
 	}
@@ -42,7 +42,7 @@ func TestCompanyCanBeReadByNameAndItCanBeEmpty(t *testing.T) {
 	nameOfTestedCompany := "Test company"
 
 	executor := Executor{Store: EmptyMockStore{}}
-	_, err := executor.ReadCompaniesByName(nameOfTestedCompany, "ru", "")
+	_, err := executor.ReadCompaniesByName(nameOfTestedCompany, "ru")
 	if err != ErrCompaniesByNameNotFound {
 		t.Fatalf(err.Error())
 	}

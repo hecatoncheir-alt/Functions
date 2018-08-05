@@ -47,8 +47,8 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	executor := Executor{Store: storage.New(request.DatabaseGateway)}
-	companies, err := executor.ReadCompaniesByName(request.CompanyName, request.Language, request.DatabaseGateway)
+	executor := Executor{Store: &storage.Store{DatabaseGateway: request.DatabaseGateway}}
+	companies, err := executor.ReadCompaniesByName(request.CompanyName, request.Language)
 	if err != nil {
 		warning := fmt.Sprintf(
 			"ReadCompaniesByName error: %v", err)

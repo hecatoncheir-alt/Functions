@@ -29,7 +29,7 @@ var (
 )
 
 // ReadCompaniesByName is a method for get all nodes by categories name
-func (executor *Executor) ReadCompaniesByName(companyName, language, databaseGateway string) ([]storage.Company, error) {
+func (executor *Executor) ReadCompaniesByName(companyName, language string) ([]storage.Company, error) {
 	variables := struct {
 		CompanyName string
 		Language    string
