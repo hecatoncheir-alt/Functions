@@ -14,11 +14,13 @@ import (
 var FAASLogger = log.New(os.Stdout, "FAASFunctions: ", log.Lshortfile)
 
 type FAASFunctions struct {
-	FAASGateway string
+	FunctionsGateway string
+	DatabaseGateway  string
 }
 
-func (functions FAASFunctions) CompaniesReadByName(companyName, language, DatabaseGateway string) []storage.Company {
-	functionPath := fmt.Sprintf("%v/%v/%v", functions.FAASGateway, "function", "storage-company-read-by-name")
+func (functions FAASFunctions) CompaniesReadByName(companyName, language string) []storage.Company {
+	functionPath := fmt.Sprintf(
+		"%v/%v/%v", functions.FunctionsGateway, "function", "storage-company-read-by-name")
 
 	body := struct {
 		Language        string
@@ -27,7 +29,7 @@ func (functions FAASFunctions) CompaniesReadByName(companyName, language, Databa
 	}{
 		Language:        language,
 		CompanyName:     companyName,
-		DatabaseGateway: DatabaseGateway}
+		DatabaseGateway: functions.DatabaseGateway}
 
 	encodedBody, err := json.Marshal(body)
 	if err != nil {

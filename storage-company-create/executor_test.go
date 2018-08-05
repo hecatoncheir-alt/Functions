@@ -5,19 +5,15 @@ import (
 	"testing"
 )
 
-type EmptyCompaniesFAASFunctions struct{}
-
-func (functions EmptyCompaniesFAASFunctions) CompaniesReadByName(
-	companyName, language, DatabaseGateway string) []storage.Company {
-	return []storage.Company{}
-}
-
+// ------------------------------------------------------------------------------------------------------
 func TestCompanyCanBeCreated(t *testing.T) {
 	companyForCreate := storage.Company{ID: "0x12", Name: "Test company", IsActive: true}
 
-	executor := Executor{Functions: EmptyCompaniesFAASFunctions{}}
+	executor := Executor{
+		Functions: EmptyCompaniesFAASFunctions{FunctionsGateway: ""},
+		Store:     MockStorage{DatabaseGateway: ""}}
 
-	createdCompany, err := executor.CreateCompany(companyForCreate, "ru", "//")
+	createdCompany, err := executor.CreateCompany(companyForCreate, "ru")
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
@@ -31,25 +27,42 @@ func TestCompanyCanBeCreated(t *testing.T) {
 	}
 }
 
+/// Mock FAAS functions
+type EmptyCompaniesFAASFunctions struct {
+	FunctionsGateway string
+}
+
+func (functions EmptyCompaniesFAASFunctions) CompaniesReadByName(companyName, language string) []storage.Company {
+	return []storage.Company{}
+}
+
+/// Mock Storage
+type MockStorage struct {
+	DatabaseGateway string
+}
+
+func (store MockStorage) Mutate(setJson []byte) (uid string, err error) {
+	return "", nil
+}
+
+func (store MockStorage) SetNQuads(subject, predicate, object string) error {
+	return nil
+}
+
+// --------------------------------------------------------------------------------------------------------
+
 func TestCompanyCanNotBeCreated(t *testing.T) {
 	// TODO
 }
 
-type NotEmptyCompaniesFAASFunctions struct{}
-
-func (functions NotEmptyCompaniesFAASFunctions) CompaniesReadByName(companyName, language, DatabaseGateway string) []storage.Company {
-	return []storage.Company{
-		{ID: "0x12", Name: "First test company name", IsActive: true},
-		{ID: "0x13", Name: "Second test company name", IsActive: true}}
-}
-
+// --------------------------------------------------------------------------------------------------------
 func TestCreatingCompanyCanBeExists(t *testing.T) {
 
 	companyForCreate := storage.Company{ID: "0x12", Name: "Test company", IsActive: true}
 
 	executor := Executor{Functions: NotEmptyCompaniesFAASFunctions{}}
 
-	existFirstTestCompany, err := executor.CreateCompany(companyForCreate, "ru", "//")
+	existFirstTestCompany, err := executor.CreateCompany(companyForCreate, "ru")
 	if err != ErrCompanyAlreadyExist {
 		t.Fatalf(err.Error())
 	}
@@ -59,3 +72,13 @@ func TestCreatingCompanyCanBeExists(t *testing.T) {
 	}
 
 }
+
+type NotEmptyCompaniesFAASFunctions struct{}
+
+func (functions NotEmptyCompaniesFAASFunctions) CompaniesReadByName(companyName, language string) []storage.Company {
+	return []storage.Company{
+		{ID: "0x12", Name: "First test company name", IsActive: true},
+		{ID: "0x13", Name: "Second test company name", IsActive: true}}
+}
+
+// ---------------------------------------------------------------------------------------------------------------

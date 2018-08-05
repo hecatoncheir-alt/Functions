@@ -37,7 +37,8 @@ func TestFAASFunctions_CompaniesReadByName(t *testing.T) {
 		}
 
 		if responseBodyEncoded["DatabaseGateway"] != DatabaseGatewayForTest {
-			t.Fatalf("Expected: \"%v\", but got: %v", DatabaseGatewayForTest, responseBodyEncoded["DatabaseGateway"])
+			t.Fatalf(
+				"Expected: \"%v\", but got: %v", DatabaseGatewayForTest, responseBodyEncoded["DatabaseGateway"])
 		}
 
 		existedCompaniesInStorage := []storage.Company{
@@ -66,8 +67,8 @@ func TestFAASFunctions_CompaniesReadByName(t *testing.T) {
 	testServer := httptest.NewServer(testHandler)
 	defer testServer.Close()
 
-	faas := FAASFunctions{FAASGateway: testServer.URL}
-	companies := faas.CompaniesReadByName(CompanyNameForTest, LanguageForTest, DatabaseGatewayForTest)
+	faas := &FAASFunctions{FunctionsGateway: testServer.URL, DatabaseGateway: DatabaseGatewayForTest}
+	companies := faas.CompaniesReadByName(CompanyNameForTest, LanguageForTest)
 
 	if len(companies) < 1 {
 		t.Fatalf("Expect more companies that 1, but got: %v", len(companies))

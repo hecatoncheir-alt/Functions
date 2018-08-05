@@ -7,10 +7,10 @@ import (
 )
 
 type Request struct {
-	Language        string
-	DatabaseGateway string
-	FAASGateway     string
-	Company         storage.Company
+	Language         string
+	DatabaseGateway  string
+	FunctionsGateway string
+	Company          storage.Company
 }
 
 type ErrorResponse struct {
@@ -49,10 +49,12 @@ func Handle(req []byte) string {
 	}
 
 	executor := Executor{
-		Store:     storage.New(request.DatabaseGateway),
-		Functions: FAASFunctions{FAASGateway: request.FAASGateway}}
+		Store: &storage.Store{DatabaseGateway: request.DatabaseGateway},
+		Functions: &FAASFunctions{
+			DatabaseGateway:  request.DatabaseGateway,
+			FunctionsGateway: request.FunctionsGateway}}
 
-	createdCompany, err := executor.CreateCompany(request.Company, request.Language, request.DatabaseGateway)
+	createdCompany, err := executor.CreateCompany(request.Company, request.Language)
 	if err != nil {
 		warning := fmt.Sprintf(
 			"CreateCompany error: %v", err)

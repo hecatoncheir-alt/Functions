@@ -9,13 +9,12 @@ import (
 )
 
 type Storage interface {
-	Query(string) ([]byte, error)
 	Mutate([]byte) (string, error)
 	SetNQuads(string, string, string) error
 }
 
 type Functions interface {
-	CompaniesReadByName(string, string, string) []storage.Company
+	CompaniesReadByName(string, string) []storage.Company
 }
 
 type Executor struct {
@@ -34,10 +33,9 @@ var (
 )
 
 // ReadCompaniesByName is a method for get all nodes by categories name
-func (executor *Executor) CreateCompany(
-	company storage.Company, language, DatabaseGateway string) (storage.Company, error) {
+func (executor *Executor) CreateCompany(company storage.Company, language string) (storage.Company, error) {
 
-	existsCompanies := executor.Functions.CompaniesReadByName(company.Name, language, DatabaseGateway)
+	existsCompanies := executor.Functions.CompaniesReadByName(company.Name, language)
 
 	if len(existsCompanies) > 0 {
 		ExecutorLogger.Printf("Company with name: %v exist: %v", company.Name, existsCompanies[0])
