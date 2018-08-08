@@ -28,10 +28,10 @@ var (
 	ErrCompanyByIDCanNotBeFound = errors.New("company by id can not be found")
 
 	// ErrCompanyDoesNotExist means than the company does not exist in database
-	ErrCompanyDoesNotExist = errors.New("company by id not found")
+	ErrCompanyDoesNotExist = errors.New("company does not exist")
 )
 
-// ReadCompaniesByName is a method for get all nodes by categories name
+// ReadCompanyByID is a method for get all nodes of categories by ID
 func (executor *Executor) ReadCompanyByID(companyID, language string) (storage.Company, error) {
 	company := storage.Company{ID: companyID}
 
