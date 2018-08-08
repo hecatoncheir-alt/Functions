@@ -3,6 +3,7 @@ package function
 import (
 	"github.com/hecatoncheir/Storage"
 	"testing"
+	"errors"
 )
 
 // ------------------------------------------------------------------------------------------------------
@@ -56,7 +57,28 @@ func (store MockStorage) SetNQuads(subject, predicate, object string) error {
 // --------------------------------------------------------------------------------------------------------
 
 func TestCompanyCanNotBeCreated(t *testing.T) {
-	// TODO
+	companyForCreate := storage.Company{ID: "0x12", Name: "Test company", IsActive: true}
+
+	executor := Executor{
+		Functions: EmptyCompaniesFAASFunctions{FunctionsGateway: ""},
+		Store:     ErrorMockStorage{DatabaseGateway: ""}}
+
+	_, err := executor.CreateCompany(companyForCreate, "ru")
+	if err != ErrCompanyCanNotBeCreated {
+		t.Fatalf(err.Error())
+	}
+}
+
+type ErrorMockStorage struct {
+	DatabaseGateway string
+}
+
+func (store ErrorMockStorage) Mutate(setJson []byte) (uid string, err error) {
+	return "", errors.New("")
+}
+
+func (store ErrorMockStorage) SetNQuads(subject, predicate, object string) error {
+	return nil
 }
 
 // --------------------------------------------------------------------------------------------------------
