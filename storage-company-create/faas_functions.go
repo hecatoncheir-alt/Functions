@@ -61,3 +61,47 @@ func (functions FAASFunctions) CompaniesReadByName(companyName, language string)
 
 	return existCompanies
 }
+
+func (functions FAASFunctions) ReadCompanyByID(companyName, language string) (storage.Company, error) {
+	functionPath := fmt.Sprintf(
+		"%v/%v/%v", functions.FunctionsGateway, "function", "storage-company-read-by-id")
+
+	body := struct {
+		Language        string
+		CompanyID       string
+		DatabaseGateway string
+	}{
+		Language:        language,
+		CompanyID:       companyName,
+		DatabaseGateway: functions.DatabaseGateway}
+
+	encodedBody, err := json.Marshal(body)
+	if err != nil {
+		FAASLogger.Println(err)
+		return storage.Company{}, nil
+	}
+
+	response, err := http.Post(functionPath, "application/json", bytes.NewBuffer(encodedBody))
+	if err != nil {
+		FAASLogger.Println(err)
+		return storage.Company{}, nil
+	}
+
+	defer response.Body.Close()
+
+	decodedResponse, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		FAASLogger.Println(err)
+		return storage.Company{}, nil
+	}
+
+	var existCompany storage.Company
+
+	err = json.Unmarshal(decodedResponse, &existCompany)
+	if err != nil {
+		FAASLogger.Println(err)
+		return storage.Company{}, err
+	}
+
+	return existCompany, nil
+}

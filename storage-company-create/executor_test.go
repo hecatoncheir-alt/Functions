@@ -19,7 +19,7 @@ func TestCompanyCanBeCreated(t *testing.T) {
 	}
 
 	if createdCompany.ID != "0x12" {
-		t.Errorf("Expect: %v, but got: %v", companyForCreate.ID, createdCompany.Name)
+		t.Errorf("Expect: %v, but got: %v", companyForCreate.ID, createdCompany.ID)
 	}
 
 	if createdCompany.Name != "Test company" {
@@ -36,13 +36,17 @@ func (functions EmptyCompaniesFAASFunctions) CompaniesReadByName(companyName, la
 	return []storage.Company{}
 }
 
+func (functions EmptyCompaniesFAASFunctions) ReadCompanyByID(companyID, language string) (storage.Company, error) {
+	return storage.Company{ID: companyID, Name: "Test company"}, nil
+}
+
 /// Mock Storage
 type MockStorage struct {
 	DatabaseGateway string
 }
 
 func (store MockStorage) Mutate(setJson []byte) (uid string, err error) {
-	return "", nil
+	return "0x12", nil
 }
 
 func (store MockStorage) SetNQuads(subject, predicate, object string) error {
@@ -79,6 +83,10 @@ func (functions NotEmptyCompaniesFAASFunctions) CompaniesReadByName(companyName,
 	return []storage.Company{
 		{ID: "0x12", Name: "First test company name", IsActive: true},
 		{ID: "0x13", Name: "Second test company name", IsActive: true}}
+}
+
+func (functions NotEmptyCompaniesFAASFunctions) ReadCompanyByID(companyID, language string) (storage.Company, error) {
+	return storage.Company{ID: "0x13", Name: "Second test company name"}, nil
 }
 
 // ---------------------------------------------------------------------------------------------------------------

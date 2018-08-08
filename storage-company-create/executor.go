@@ -15,6 +15,7 @@ type Storage interface {
 
 type Functions interface {
 	CompaniesReadByName(string, string) []storage.Company
+	ReadCompanyByID(string, string) (storage.Company, error)
 }
 
 type Executor struct {
@@ -49,15 +50,20 @@ func (executor *Executor) CreateCompany(company storage.Company, language string
 		return company, ErrCompanyCanNotBeCreated
 	}
 
-	_, err = executor.Store.Mutate(encodedCompany)
+	uidOfCreatedCompany, err := executor.Store.Mutate(encodedCompany)
 	if err != nil {
 		return company, ErrCompanyCanNotBeCreated
 	}
 
-	err = executor.Store.SetNQuads(company.ID, "companyName", "\""+company.Name+"\""+"@"+language)
+	err = executor.Store.SetNQuads(uidOfCreatedCompany, "companyName", "\""+company.Name+"\""+"@"+language)
 	if err != nil {
 		return company, ErrCompanyCanNotBeCreated
 	}
 
-	return storage.Company{}, nil
+	createdCompany, err := executor.Functions.ReadCompanyByID(uidOfCreatedCompany, language)
+	if err != nil {
+		return company, ErrCompanyCanNotBeCreated
+	}
+
+	return createdCompany, nil
 }
