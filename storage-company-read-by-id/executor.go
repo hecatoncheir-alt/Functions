@@ -21,24 +21,34 @@ type Executor struct {
 var logger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
 
 var (
-	// ErrCompaniesByNameCanNotBeFound means that the companies can't be found in database
-	ErrCompaniesByNameCanNotBeFound = errors.New("companies by name can not be found")
+	// ErrCompanyCanNotBeWithoutID means that company can't be found in storage for make some operation
+	ErrCompanyCanNotBeWithoutID = errors.New("company can not be without id")
 
-	// ErrCompaniesByNameNotFound means than the companies does not exist in database
-	ErrCompaniesByNameNotFound = errors.New("companies by name not found")
+	// ErrCompanyByIDCanNotBeFound means that the company can't be found in database
+	ErrCompanyByIDCanNotBeFound = errors.New("company by id can not be found")
+
+	// ErrCompanyDoesNotExist means than the company does not exist in database
+	ErrCompanyDoesNotExist = errors.New("company does not exist")
 )
 
-// ReadCompaniesByName is a method for get all nodes by categories name
-func (executor *Executor) ReadCompaniesByName(companyName, language string) ([]storage.Company, error) {
-	variables := struct {
-		CompanyName string
-		Language    string
-	}{
-		CompanyName: companyName,
-		Language:    language}
+// ReadCompanyByID is a method for get all nodes of categories by ID
+func (executor *Executor) ReadCompanyByID(companyID, language string) (storage.Company, error) {
+	company := storage.Company{ID: companyID}
 
-	queryTemplate, err := template.New("ReadCompaniesByName").Parse(`{
-				companies(func: eq(companyName@{{.Language}}, "{{.CompanyName}}")) @filter(eq(companyIsActive, true)) {
+	if companyID == "" {
+		logger.Println(ErrCompanyCanNotBeWithoutID)
+		return company, ErrCompanyCanNotBeWithoutID
+	}
+
+	variables := struct {
+		CompanyID string
+		Language  string
+	}{
+		CompanyID: companyID,
+		Language:  language}
+
+	queryTemplate, err := template.New("ReadCompanyByID").Parse(`{
+				companies(func: uid("{{.CompanyID}}")) @filter(has(companyName)) {
 					uid
 					companyName: companyName@{{.Language}}
 					companyIri
@@ -57,7 +67,7 @@ func (executor *Executor) ReadCompaniesByName(companyName, language string) ([]s
 								categoryIsActive
 							}
 						}
-						has_product @filter(eq(productIsActive, true)) { #TODO: belongs_to_company mast be an companyID
+						has_product @filter(uid_in(belongs_to_company, {{.CompanyID}}) AND eq(productIsActive, true)) {
 							uid
 							productName: productName@{{.Language}}
 							productIri
@@ -106,37 +116,37 @@ func (executor *Executor) ReadCompaniesByName(companyName, language string) ([]s
 
 	if err != nil {
 		logger.Println(err)
-		return nil, ErrCompaniesByNameCanNotBeFound
+		return company, ErrCompanyByIDCanNotBeFound
 	}
 
 	queryBuf := bytes.Buffer{}
 	err = queryTemplate.Execute(&queryBuf, variables)
 	if err != nil {
 		logger.Println(err)
-		return nil, err
+		return company, err
 	}
 
 	response, err := executor.Store.Query(queryBuf.String())
 	if err != nil {
 		logger.Println(err)
-		return nil, ErrCompaniesByNameCanNotBeFound
+		return company, ErrCompanyByIDCanNotBeFound
 	}
 
-	type companiesInStorage struct {
-		AllCompaniesFoundedByName []storage.Company `json:"companies"`
+	type companiesInStore struct {
+		Companies []storage.Company `json:"companies"`
 	}
 
-	var foundedCompanies companiesInStorage
+	var foundedCompanies companiesInStore
+
 	err = json.Unmarshal(response, &foundedCompanies)
 	if err != nil {
 		logger.Println(err)
-		return nil, ErrCompaniesByNameCanNotBeFound
+		return company, ErrCompanyByIDCanNotBeFound
 	}
 
-	if len(foundedCompanies.AllCompaniesFoundedByName) == 0 {
-		logger.Println(ErrCompaniesByNameNotFound)
-		return nil, ErrCompaniesByNameNotFound
+	if len(foundedCompanies.Companies) == 0 {
+		return company, ErrCompanyDoesNotExist
 	}
 
-	return foundedCompanies.AllCompaniesFoundedByName, nil
+	return foundedCompanies.Companies[0], nil
 }

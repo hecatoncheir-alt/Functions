@@ -8,7 +8,7 @@ import (
 
 type Request struct {
 	Language        string
-	CompanyName     string
+	CompanyID       string
 	DatabaseGateway string
 }
 
@@ -48,15 +48,15 @@ func Handle(req []byte) string {
 	}
 
 	executor := Executor{Store: &storage.Store{DatabaseGateway: request.DatabaseGateway}}
-	companies, err := executor.ReadCompaniesByName(request.CompanyName, request.Language)
+	company, err := executor.ReadCompanyByID(request.CompanyID, request.Language)
 	if err != nil {
 		warning := fmt.Sprintf(
-			"ReadCompaniesByName error: %v", err)
+			"ReadCompanyByID error: %v", err)
 
 		fmt.Println(warning)
 
 		errorResponse := ErrorResponse{
-			Error: "ReadCompaniesByName error",
+			Error: "ReadCompanyByID error",
 			Data: ErrorData{
 				Request: string(req),
 				Error:   err.Error()}}
@@ -69,15 +69,15 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	encodedCompanies, err := json.Marshal(companies)
+	encodedCompany, err := json.Marshal(company)
 	if err != nil {
 		warning := fmt.Sprintf(
-			"Unmarshal companies error: %v. Error: %v", companies, err)
+			"Unmarshal company error: %v. Error: %v", company, err)
 
 		fmt.Println(warning)
 
 		errorResponse := ErrorResponse{
-			Error: "Unmarshal companies error",
+			Error: "Unmarshal company error",
 			Data: ErrorData{
 				Request: string(req),
 				Error:   err.Error()}}
@@ -90,5 +90,5 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	return string(encodedCompanies)
+	return string(encodedCompany)
 }
