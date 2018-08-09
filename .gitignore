@@ -69,11 +69,14 @@ fabric.properties
 /.idea/
 .idea/vcs.xml
 
+template
+build
+
 mvideo-page-parser/Gopkg.lock
 mvideo-page-parser/vendor/
 
 mvideo-pages-count-parser/Gopkg.lock
 mvideo-pages-count-parser/vendor/
 
-template
-build
+/storage-category-read-by-name/vendor/
+/storage-category-read-by-name/Gopkg.lock
