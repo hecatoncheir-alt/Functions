@@ -1,9 +1,9 @@
 package function
 
 import (
+	"errors"
 	"github.com/hecatoncheir/Storage"
 	"testing"
-	"errors"
 )
 
 // ------------------------------------------------------------------------------------------------------
