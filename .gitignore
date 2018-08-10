@@ -80,3 +80,6 @@ mvideo-pages-count-parser/vendor/
 
 /storage-category-read-by-name/vendor/
 /storage-category-read-by-name/Gopkg.lock
+
+template
+build
