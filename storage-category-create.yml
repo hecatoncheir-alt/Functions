@@ -1,0 +1,9 @@
+provider:
+  name: faas
+  gateway: http://127.0.0.1:8080
+
+functions:
+  storage-category-create:
+    lang: go
+    handler: ./storage-category-create
+    image: storage-category-create
