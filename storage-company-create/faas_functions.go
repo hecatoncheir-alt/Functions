@@ -62,7 +62,7 @@ func (functions FAASFunctions) CompaniesReadByName(companyName, language string)
 	return existCompanies
 }
 
-func (functions FAASFunctions) ReadCompanyByID(companyName, language string) (storage.Company, error) {
+func (functions FAASFunctions) ReadCompanyByID(companyID, language string) storage.Company {
 	functionPath := fmt.Sprintf(
 		"%v/%v/%v", functions.FunctionsGateway, "function", "storage-company-read-by-id")
 
@@ -72,19 +72,19 @@ func (functions FAASFunctions) ReadCompanyByID(companyName, language string) (st
 		DatabaseGateway string
 	}{
 		Language:        language,
-		CompanyID:       companyName,
+		CompanyID:       companyID,
 		DatabaseGateway: functions.DatabaseGateway}
 
 	encodedBody, err := json.Marshal(body)
 	if err != nil {
 		FAASLogger.Println(err)
-		return storage.Company{}, nil
+		return storage.Company{}
 	}
 
 	response, err := http.Post(functionPath, "application/json", bytes.NewBuffer(encodedBody))
 	if err != nil {
 		FAASLogger.Println(err)
-		return storage.Company{}, nil
+		return storage.Company{}
 	}
 
 	defer response.Body.Close()
@@ -92,7 +92,7 @@ func (functions FAASFunctions) ReadCompanyByID(companyName, language string) (st
 	decodedResponse, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		FAASLogger.Println(err)
-		return storage.Company{}, nil
+		return storage.Company{}
 	}
 
 	var existCompany storage.Company
@@ -100,8 +100,8 @@ func (functions FAASFunctions) ReadCompanyByID(companyName, language string) (st
 	err = json.Unmarshal(decodedResponse, &existCompany)
 	if err != nil {
 		FAASLogger.Println(err)
-		return storage.Company{}, err
+		return storage.Company{}
 	}
 
-	return existCompany, nil
+	return existCompany
 }

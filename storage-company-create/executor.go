@@ -15,7 +15,7 @@ type Storage interface {
 
 type Functions interface {
 	CompaniesReadByName(string, string) []storage.Company
-	ReadCompanyByID(string, string) (storage.Company, error)
+	ReadCompanyByID(string, string) storage.Company
 }
 
 type Executor struct {
@@ -33,7 +33,7 @@ var (
 	ErrCompanyAlreadyExist = errors.New("company already exist")
 )
 
-// ReadCompaniesByName is a method for get all nodes by categories name
+// CreateCompany make category and save it to storage
 func (executor *Executor) CreateCompany(company storage.Company, language string) (storage.Company, error) {
 
 	existsCompanies := executor.Functions.CompaniesReadByName(company.Name, language)
@@ -60,10 +60,7 @@ func (executor *Executor) CreateCompany(company storage.Company, language string
 		return company, ErrCompanyCanNotBeCreated
 	}
 
-	createdCompany, err := executor.Functions.ReadCompanyByID(uidOfCreatedCompany, language)
-	if err != nil {
-		return company, ErrCompanyCanNotBeCreated
-	}
+	createdCompany := executor.Functions.ReadCompanyByID(uidOfCreatedCompany, language)
 
 	return createdCompany, nil
 }

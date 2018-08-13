@@ -37,8 +37,8 @@ func (functions EmptyCompaniesFAASFunctions) CompaniesReadByName(companyName, la
 	return []storage.Company{}
 }
 
-func (functions EmptyCompaniesFAASFunctions) ReadCompanyByID(companyID, language string) (storage.Company, error) {
-	return storage.Company{ID: companyID, Name: "Test company"}, nil
+func (functions EmptyCompaniesFAASFunctions) ReadCompanyByID(companyID, language string) storage.Company {
+	return storage.Company{ID: companyID, Name: "Test company"}
 }
 
 /// Mock Storage
@@ -107,8 +107,8 @@ func (functions NotEmptyCompaniesFAASFunctions) CompaniesReadByName(companyName,
 		{ID: "0x13", Name: "Second test company name", IsActive: true}}
 }
 
-func (functions NotEmptyCompaniesFAASFunctions) ReadCompanyByID(companyID, language string) (storage.Company, error) {
-	return storage.Company{ID: "0x13", Name: "Second test company name"}, nil
+func (functions NotEmptyCompaniesFAASFunctions) ReadCompanyByID(companyID, language string) storage.Company {
+	return storage.Company{ID: "0x13", Name: "Second test company name"}
 }
 
 // ---------------------------------------------------------------------------------------------------------------
