@@ -74,3 +74,7 @@ func TestFAASFunctions_CompaniesReadByName(t *testing.T) {
 		t.Fatalf("Expect more companies that 1, but got: %v", len(companies))
 	}
 }
+
+func TestFAASFunctions_ReadCompanyByID(t *testing.T) {
+	// TODO
+}

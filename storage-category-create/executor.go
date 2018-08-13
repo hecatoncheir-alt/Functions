@@ -15,7 +15,7 @@ type Storage interface {
 
 type Functions interface {
 	ReadCategoriesByName(string, string) []storage.Category
-	ReadCategoryByID(string, string) (storage.Category, error)
+	ReadCategoryByID(string, string) storage.Category
 }
 
 type Executor struct {
@@ -58,10 +58,7 @@ func (executor *Executor) CreateCategory(category storage.Category, language str
 		return category, ErrCategoryCanNotBeCreated
 	}
 
-	createdCategory, err := executor.Functions.ReadCategoryByID(uidOfCreatedCategory, language)
-	if err != nil {
-		return category, ErrCategoryCanNotBeCreated
-	}
+	createdCategory := executor.Functions.ReadCategoryByID(uidOfCreatedCategory, language)
 
 	return createdCategory, nil
 }

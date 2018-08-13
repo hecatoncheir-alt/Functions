@@ -62,6 +62,46 @@ func (functions FAASFunctions) ReadCategoriesByName(categoryName, language strin
 	return existCategories
 }
 
-func (functions FAASFunctions) ReadCategoryByID(companyName, language string) (storage.Category, error) {
-	/// TODO
+func (functions FAASFunctions) ReadCategoryByID(categoryID, language string) storage.Category {
+	functionPath := fmt.Sprintf(
+		"%v/%v/%v", functions.FunctionsGateway, "function", "storage-category-read-by-id")
+
+	body := struct {
+		Language        string
+		CategoryID      string
+		DatabaseGateway string
+	}{
+		Language:        language,
+		CategoryID:      categoryID,
+		DatabaseGateway: functions.DatabaseGateway}
+
+	encodedBody, err := json.Marshal(body)
+	if err != nil {
+		FAASLogger.Println(err)
+		return storage.Category{}
+	}
+
+	response, err := http.Post(functionPath, "application/json", bytes.NewBuffer(encodedBody))
+	if err != nil {
+		FAASLogger.Println(err)
+		return storage.Category{}
+	}
+
+	defer response.Body.Close()
+
+	decodedResponse, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		FAASLogger.Println(err)
+		return storage.Category{}
+	}
+
+	var existCategory storage.Category
+
+	err = json.Unmarshal(decodedResponse, &existCategory)
+	if err != nil {
+		FAASLogger.Println(err)
+		return storage.Category{}
+	}
+
+	return existCategory
 }
