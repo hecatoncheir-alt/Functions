@@ -1,0 +1,9 @@
+provider:
+  name: faas
+  gateway: http://127.0.0.1:8080
+
+functions:
+  storage-product-read-by-id:
+    lang: go
+    handler: ./storage-product-read-by-id
+    image: storage-product-read-by-id
