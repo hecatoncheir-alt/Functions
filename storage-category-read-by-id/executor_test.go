@@ -50,7 +50,7 @@ func (store MockStore) Query(request string) (response []byte, err error) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-func TestCategoryCanBeReadByNameWithError(t *testing.T) {
+func TestCategoryCanBeReadByIDWithError(t *testing.T) {
 	IDOfTestedCategory := "0x12"
 
 	executor := Executor{Store: ErrorMockStore{}}
@@ -70,7 +70,7 @@ func (store ErrorMockStore) Query(request string) (response []byte, err error) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-func TestCompanyCanBeReadByNameAndItCanBeEmpty(t *testing.T) {
+func TestCompanyCanBeReadByIDAndItCanBeEmpty(t *testing.T) {
 	IDOfTestedCompany := "0x12"
 
 	executor := Executor{Store: EmptyMockStore{}}
