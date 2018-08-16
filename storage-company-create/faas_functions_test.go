@@ -33,7 +33,7 @@ func TestFAASFunctions_CompaniesReadByName(t *testing.T) {
 		}
 
 		if responseBodyEncoded["CompanyName"] != CompanyNameForTest {
-			t.Fatalf("Expected: \"%v\", but got: %v", CompanyNameForTest, responseBodyEncoded["Language"])
+			t.Fatalf("Expected: \"%v\", but got: %v", CompanyNameForTest, responseBodyEncoded["CompanyName"])
 		}
 
 		if responseBodyEncoded["DatabaseGateway"] != DatabaseGatewayForTest {
