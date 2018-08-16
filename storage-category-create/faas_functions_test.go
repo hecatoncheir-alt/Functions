@@ -33,7 +33,7 @@ func TestFAASFunctions_ReadCategoriesByName(t *testing.T) {
 		}
 
 		if responseBodyEncoded["CategoryName"] != CategoryNameForTest {
-			t.Fatalf("Expected: \"%v\", but got: %v", CategoryNameForTest, responseBodyEncoded["Language"])
+			t.Fatalf("Expected: \"%v\", but got: %v", CategoryNameForTest, responseBodyEncoded["CategoryName"])
 		}
 
 		if responseBodyEncoded["DatabaseGateway"] != DatabaseGatewayForTest {
@@ -96,7 +96,7 @@ func TestFAASFunctions_ReadCategoryByID(t *testing.T) {
 		}
 
 		if responseBodyEncoded["CategoryID"] != CategoryIDForTest {
-			t.Fatalf("Expected: \"%v\", but got: %v", CategoryIDForTest, responseBodyEncoded["Language"])
+			t.Fatalf("Expected: \"%v\", but got: %v", CategoryIDForTest, responseBodyEncoded["CategoryID"])
 		}
 
 		if responseBodyEncoded["DatabaseGateway"] != DatabaseGatewayForTest {
