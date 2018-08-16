@@ -40,7 +40,7 @@ func (store MockStore) Query(request string) (response []byte, err error) {
 		{  
 		   "counters":[  
 				{
-					"total": 4
+					"total": 2
 				}
 			],
 
@@ -136,7 +136,6 @@ func TestProductCanBeReadByNameWithPagination(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 
-	// TODO check structure
 	if len(productsFromStore.Products) < 1 {
 		t.Fatalf("Expected 1 product, actual: %v", len(productsFromStore.Products))
 	}
@@ -147,6 +146,22 @@ func TestProductCanBeReadByNameWithPagination(t *testing.T) {
 
 	if productsFromStore.Products[0].Name != nameOfTestedProduct {
 		t.Fatalf("Expected name of product: 'Test product', actual: %v", productsFromStore.Products[0].Name)
+	}
+
+	if productsFromStore.CurrentPage != 2 {
+		t.Fatalf("Expected current page is: 2, actual: %v", productsFromStore.CurrentPage)
+	}
+
+	if productsFromStore.SearchedName != nameOfTestedProduct {
+		t.Fatalf("Expected name of searched product: 'Test product', actual: %v", productsFromStore.SearchedName)
+	}
+
+	if productsFromStore.TotalProductsForOnePage != 10 {
+		t.Fatalf("Expected 10 products for one page, actual: %v", productsFromStore.TotalProductsForOnePage)
+	}
+
+	if productsFromStore.TotalProductsFound != 2 {
+		t.Fatalf("Expected 2 products found, actual: %v", productsFromStore.TotalProductsFound)
 	}
 }
 
@@ -160,7 +175,7 @@ func (store MockStoreForPagination) Query(request string) (response []byte, err 
 		{  
 		   "counters":[  
 				{
-					"total": 4
+					"total": 2
 				}
 			],
 
