@@ -76,10 +76,10 @@ func Handle(req []byte) string {
 
 	noErrorResponse := NoErrorResponse{Error: ""}
 
-	encodedCompany, err := json.Marshal(noErrorResponse)
+	encodedNoErrorResponse, err := json.Marshal(noErrorResponse)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	return string(encodedCompany)
+	return string(encodedNoErrorResponse)
 }
