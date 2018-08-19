@@ -18,7 +18,7 @@ type Executor struct {
 	Store Storage
 }
 
-var logger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
+var ExecutorLogger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
 
 var (
 	// ErrProductCanNotBeWithoutID means that product can't be found in storage for make some operation
@@ -36,7 +36,7 @@ func (executor *Executor) ReadProductByID(productID, language string) (storage.P
 	product := storage.Product{}
 
 	if productID == "" {
-		logger.Println(ErrProductCanNotBeWithoutID)
+		ExecutorLogger.Println("Product can't be without ID")
 		return product, ErrProductCanNotBeWithoutID
 	}
 
