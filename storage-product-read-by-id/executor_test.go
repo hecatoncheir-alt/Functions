@@ -54,10 +54,10 @@ func (store MockStore) Query(request string) (response []byte, err error) {
 // ---------------------------------------------------------------------------------------------------------------------
 
 func TestProductCanBeReadByIDWithError(t *testing.T) {
-	IDOfTestedCategory := "0x12"
+	IDOfTestedProduct := "0x12"
 
 	executor := Executor{Store: ErrorMockStore{}}
-	_, err := executor.ReadProductByID(IDOfTestedCategory, "ru")
+	_, err := executor.ReadProductByID(IDOfTestedProduct, "ru")
 	if err != ErrProductByIDCanNotBeFound {
 		t.Fatalf(err.Error())
 	}
@@ -74,10 +74,10 @@ func (store ErrorMockStore) Query(request string) (response []byte, err error) {
 // ---------------------------------------------------------------------------------------------------------------------
 
 func TestProductCanBeReadByIDAndItCanBeEmpty(t *testing.T) {
-	IDOfTestedCompany := "0x12"
+	IDOfTestedProduct := "0x12"
 
 	executor := Executor{Store: EmptyMockStore{}}
-	_, err := executor.ReadProductByID(IDOfTestedCompany, "ru")
+	_, err := executor.ReadProductByID(IDOfTestedProduct, "ru")
 	if err != ErrProductDoesNotExist {
 		t.Fatalf(err.Error())
 	}
