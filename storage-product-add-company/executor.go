@@ -28,7 +28,7 @@ var (
 func (executor *Executor) AddCompanyToProduct(productID, companyID string) error {
 	err := executor.Store.SetNQuads(companyID, "has_product", productID)
 	if err != nil {
-		ExecutorLogger.Printf("Product with ID: %v can not be added to category with ID: %v", productID, companyID)
+		ExecutorLogger.Printf("Product with ID: %v can not be added to company with ID: %v", productID, companyID)
 		return ErrProductCanNotBeAddedToCompany
 	}
 
