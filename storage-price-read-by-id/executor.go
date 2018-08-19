@@ -18,7 +18,7 @@ type Executor struct {
 	Store Storage
 }
 
-var logger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
+var ExecutorLogger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
 
 var (
 	// ErrPriceCanNotBeWithoutID means that price can't be without id
@@ -36,7 +36,7 @@ func (executor *Executor) ReadPriceByID(priceID, language string) (storage.Price
 	price := storage.Price{}
 
 	if priceID == "" {
-		logger.Println(ErrPriceCanNotBeWithoutID)
+		ExecutorLogger.Printf("Price can't be without ID")
 		return price, ErrPriceCanNotBeWithoutID
 	}
 
