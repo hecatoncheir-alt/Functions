@@ -33,6 +33,7 @@ var (
 func (executor *Executor) CreateInstruction(instruction storage.Instruction, language string) (storage.Instruction, error) {
 
 	instruction.IsActive = true
+	instruction.Language = language
 
 	encodedInstruction, err := json.Marshal(instruction)
 	if err != nil {
