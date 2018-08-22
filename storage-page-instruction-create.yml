@@ -1,0 +1,9 @@
+provider:
+  name: faas
+  gateway: http://127.0.0.1:8080
+
+functions:
+  storage-page-instruction-create:
+    lang: go
+    handler: ./storage-page-instruction-create
+    image: storage-page-instruction-create:latest
