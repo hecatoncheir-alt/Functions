@@ -8,7 +8,7 @@ import (
 
 type Request struct {
 	DatabaseGateway,
-	ProductID,
+	InstructionID,
 	CompanyID string
 }
 
@@ -53,15 +53,15 @@ func Handle(req []byte) string {
 
 	executor := Executor{Store: &storage.Store{DatabaseGateway: request.DatabaseGateway}}
 
-	err = executor.AddCompanyToInstruction(request.ProductID, request.CompanyID)
+	err = executor.AddCompanyToInstruction(request.InstructionID, request.CompanyID)
 	if err != nil {
 		warning := fmt.Sprintf(
-			"Add company to product error: %v", err)
+			"Add company to instruction error: %v", err)
 
 		fmt.Println(warning)
 
 		errorResponse := ErrorResponse{
-			Error: "Add company to product error",
+			Error: "Add company to instruction error",
 			Data: ErrorData{
 				Request: string(req),
 				Error:   err.Error()}}
