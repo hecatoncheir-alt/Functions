@@ -25,7 +25,7 @@ var (
 	ErrCategoryByIDCanNotBeDeleted = errors.New("category by id can not be deleted")
 )
 
-// DeleteCategoryByID is a method for delete all nodes of categories by ID
+// DeleteCategoryByID is a method for delete category by ID
 func (executor *Executor) DeleteCategoryByID(categoryID string) error {
 
 	if categoryID == "" {
