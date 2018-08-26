@@ -16,7 +16,7 @@ import (
 )
 
 func TestExecutor_DeleteCategoryByID(t *testing.T) {
-	//t.Skip("Database must be started")
+	t.Skip("Database must be started")
 
 	DatabaseGateway := "localhost:9080"
 	databaseClient, err := connectToDatabase(DatabaseGateway)
