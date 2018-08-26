@@ -18,7 +18,7 @@ type Executor struct {
 	Store Storage
 }
 
-var logger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
+var ExecutorLogger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
 
 var (
 	// ErrCategoriesByNameNotFound means than the categories does not exist in database
@@ -79,20 +79,20 @@ func (executor *Executor) ReadCategoriesByName(categoryName, language string) ([
 			}`)
 
 	if err != nil {
-		logger.Println(err)
+		ExecutorLogger.Println(err)
 		return nil, ErrCategoriesByNameCanNotBeFound
 	}
 
 	queryBuf := bytes.Buffer{}
 	err = queryTemplate.Execute(&queryBuf, variables)
 	if err != nil {
-		logger.Println(err)
+		ExecutorLogger.Println(err)
 		return nil, ErrCategoriesByNameCanNotBeFound
 	}
 
 	response, err := executor.Store.Query(queryBuf.String())
 	if err != nil {
-		logger.Println(err)
+		ExecutorLogger.Println(err)
 		return nil, ErrCategoriesByNameCanNotBeFound
 	}
 
@@ -103,7 +103,7 @@ func (executor *Executor) ReadCategoriesByName(categoryName, language string) ([
 	var foundedCategories categoriesInStorage
 	err = json.Unmarshal(response, &foundedCategories)
 	if err != nil {
-		logger.Println(err)
+		ExecutorLogger.Println(err)
 		return nil, ErrCategoriesByNameCanNotBeFound
 	}
 

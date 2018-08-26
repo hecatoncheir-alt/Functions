@@ -48,7 +48,7 @@ func Handle(req []byte) string {
 	}
 
 	executor := Executor{Store: &storage.Store{DatabaseGateway: request.DatabaseGateway}}
-	companies, err := executor.ReadCategoriesByName(request.CategoryName, request.Language)
+	categories, err := executor.ReadCategoriesByName(request.CategoryName, request.Language)
 	if err != nil {
 		warning := fmt.Sprintf(
 			"ReadCategoriesByName error: %v", err)
@@ -69,10 +69,10 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	encodedCategories, err := json.Marshal(companies)
+	encodedCategories, err := json.Marshal(categories)
 	if err != nil {
 		warning := fmt.Sprintf(
-			"Unmarshal categories error: %v. Error: %v", companies, err)
+			"Unmarshal categories error: %v. Error: %v", categories, err)
 
 		fmt.Println(warning)
 
