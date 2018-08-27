@@ -40,3 +40,14 @@ Content-Type: application/json
   "DatabaseGateway": "{{DatabaseGateway}}"
 }
 ###
+
+### Send POST request with json body for delete category by id
+POST {{FunctionsGateway}}/storage-category-delete
+Content-Type: application/json
+
+{
+  "Language":"{{Language}}",
+  "CategoryID":"{{CategoryID}}",
+  "DatabaseGateway": "{{DatabaseGateway}}"
+}
+###
