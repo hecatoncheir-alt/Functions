@@ -20,7 +20,7 @@ type FAASFunctions struct {
 
 func (functions FAASFunctions) CompaniesReadByName(companyName, language string) []storage.Company {
 	functionPath := fmt.Sprintf(
-		"%v/%v/%v", functions.FunctionsGateway, "function", "storage-company-read-by-name")
+		"%v/%v", functions.FunctionsGateway, "storage-company-read-by-name")
 
 	body := struct {
 		Language        string
