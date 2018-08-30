@@ -9,8 +9,7 @@ import (
 )
 
 type Storage interface {
-	Mutate([]byte) (string, error)
-	SetNQuads(string, string, string) error
+	CreateJSON([]byte) (string, error)
 }
 
 type Functions interface {
@@ -37,7 +36,7 @@ func (executor *Executor) CreatePageInstruction(pageInstruction storage.PageInst
 		return pageInstruction, ErrPageInstructionCanNotBeCreated
 	}
 
-	uidOfCreatedPageInstruction, err := executor.Store.Mutate(encodedPageInstruction)
+	uidOfCreatedPageInstruction, err := executor.Store.CreateJSON(encodedPageInstruction)
 	if err != nil {
 		return pageInstruction, ErrPageInstructionCanNotBeCreated
 	}
