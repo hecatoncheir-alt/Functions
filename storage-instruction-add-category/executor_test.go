@@ -24,7 +24,7 @@ type MockStorage struct {
 	DatabaseGateway string
 }
 
-func (store MockStorage) SetNQuads(subject, predicate, object string) error {
+func (store MockStorage) AddEntityToOtherEntity(entityID, field, addedEntityID string) error {
 	return nil
 }
 
@@ -47,10 +47,10 @@ type AddCategoryToInstructionErrorMockStorage struct {
 	DatabaseGateway string
 }
 
-func (store AddCategoryToInstructionErrorMockStorage) SetNQuads(subject, predicate, object string) error {
+func (store AddCategoryToInstructionErrorMockStorage) AddEntityToOtherEntity(entityID, field, addedEntityID string) error {
 	var status error
 
-	if predicate == "has_category" {
+	if field == "has_category" {
 		status = errors.New("")
 	}
 

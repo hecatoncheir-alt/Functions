@@ -7,7 +7,7 @@ import (
 )
 
 type Storage interface {
-	SetNQuads(string, string, string) error
+	AddEntityToOtherEntity(string, string, string) error
 }
 
 type Executor struct {
@@ -23,7 +23,7 @@ var (
 
 // AddCategoryToInstruction method for set quad of predicate about Category and Instruction
 func (executor *Executor) AddCategoryToInstruction(instructionID, categoryID string) error {
-	err := executor.Store.SetNQuads(instructionID, "has_category", categoryID)
+	err := executor.Store.AddEntityToOtherEntity(instructionID, "has_category", categoryID)
 	if err != nil {
 		ExecutorLogger.Printf("Category with ID: %v can not be added to instruction with ID: %v", categoryID, instructionID)
 		return ErrCategoryCanNotBeAddedToInstruction
