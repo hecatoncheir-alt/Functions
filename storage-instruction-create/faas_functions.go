@@ -20,7 +20,7 @@ type FAASFunctions struct {
 
 func (functions FAASFunctions) ReadInstructionByID(instructionID, language string) storage.Instruction {
 	functionPath := fmt.Sprintf(
-		"%v/%v/%v", functions.FunctionsGateway, "function", "storage-instruction-read-by-id")
+		"%v/%v", functions.FunctionsGateway, "storage-instruction-read-by-id")
 
 	body := struct {
 		Language        string

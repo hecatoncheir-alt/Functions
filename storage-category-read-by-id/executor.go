@@ -18,7 +18,7 @@ type Executor struct {
 	Store Storage
 }
 
-var logger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
+var ExecutorLogger = log.New(os.Stdout, "Executor: ", log.Lshortfile)
 
 var (
 	// ErrCategoryCanNotBeWithoutID means that category can't be found in storage for make some operation
@@ -36,7 +36,7 @@ func (executor *Executor) ReadCategoryByID(categoryID, language string) (storage
 	category := storage.Category{}
 
 	if categoryID == "" {
-		logger.Println(ErrCategoryCanNotBeWithoutID)
+		ExecutorLogger.Println(ErrCategoryCanNotBeWithoutID)
 		return category, ErrCategoryCanNotBeWithoutID
 	}
 
@@ -90,20 +90,20 @@ func (executor *Executor) ReadCategoryByID(categoryID, language string) (storage
 	category.ID = categoryID
 
 	if err != nil {
-		log.Println(err)
+		ExecutorLogger.Println(err)
 		return category, ErrCategoryByIDCanNotBeFound
 	}
 
 	queryBuf := bytes.Buffer{}
 	err = queryTemplate.Execute(&queryBuf, variables)
 	if err != nil {
-		log.Println(err)
+		ExecutorLogger.Println(err)
 		return category, ErrCategoryByIDCanNotBeFound
 	}
 
 	response, err := executor.Store.Query(queryBuf.String())
 	if err != nil {
-		log.Println(err)
+		ExecutorLogger.Println(err)
 		return category, ErrCategoryByIDCanNotBeFound
 	}
 
@@ -115,7 +115,7 @@ func (executor *Executor) ReadCategoryByID(categoryID, language string) (storage
 
 	err = json.Unmarshal(response, &foundedCategories)
 	if err != nil {
-		log.Println(err)
+		ExecutorLogger.Println(err)
 		return category, ErrCategoryByIDCanNotBeFound
 	}
 

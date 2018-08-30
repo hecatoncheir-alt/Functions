@@ -9,8 +9,7 @@ import (
 )
 
 type Storage interface {
-	Mutate([]byte) (string, error)
-	SetNQuads(string, string, string) error
+	CreateJSON([]byte) (string, error)
 }
 
 type Functions interface {
@@ -40,7 +39,7 @@ func (executor *Executor) CreateInstruction(instruction storage.Instruction, lan
 		return instruction, ErrInstructionCanNotBeCreated
 	}
 
-	uidOfCreatedInstruction, err := executor.Store.Mutate(encodedInstruction)
+	uidOfCreatedInstruction, err := executor.Store.CreateJSON(encodedInstruction)
 	if err != nil {
 		return instruction, ErrInstructionCanNotBeCreated
 	}

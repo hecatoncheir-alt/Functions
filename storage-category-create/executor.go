@@ -9,8 +9,8 @@ import (
 )
 
 type Storage interface {
-	Mutate([]byte) (string, error)
-	SetNQuads(string, string, string) error
+	CreateJSON([]byte) (string, error)
+	AddLanguage(string, string, string) error
 }
 
 type Functions interface {
@@ -48,12 +48,12 @@ func (executor *Executor) CreateCategory(category storage.Category, language str
 		return category, ErrCategoryCanNotBeCreated
 	}
 
-	uidOfCreatedCategory, err := executor.Store.Mutate(encodedCategory)
+	uidOfCreatedCategory, err := executor.Store.CreateJSON(encodedCategory)
 	if err != nil {
 		return category, ErrCategoryCanNotBeCreated
 	}
 
-	err = executor.Store.SetNQuads(uidOfCreatedCategory, "categoryName", "\""+category.Name+"\""+"@"+language)
+	err = executor.Store.AddLanguage(uidOfCreatedCategory, "categoryName", "\""+category.Name+"\""+"@"+language)
 	if err != nil {
 		return category, ErrCategoryCanNotBeCreated
 	}

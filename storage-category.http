@@ -1,0 +1,53 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection).
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+
+### Send POST request with json body for read category by naem
+POST {{FunctionsGateway}}/storage-category-read-by-name
+Content-Type: application/json
+
+{
+  "Language":"{{Language}}",
+  "CategoryName":"{{CategoryName}}",
+  "DatabaseGateway": "{{DatabaseGateway}}"
+}
+###
+
+### Send POST request with json body for read category by id
+POST {{FunctionsGateway}}/storage-category-read-by-id
+Content-Type: application/json
+
+{
+  "Language":"{{Language}}",
+  "CategoryID":"{{CategoryID}}",
+  "DatabaseGateway": "{{DatabaseGateway}}"
+}
+###
+
+### Send POST request with json body for create category
+POST {{FunctionsGateway}}/storage-category-create
+Content-Type: application/json
+
+{
+  "Language":"{{Language}}",
+  "Category": {
+      "categoryName": "Test category name"
+  },
+  "FunctionsGateway": "{{FunctionsGateway}}",
+  "DatabaseGateway": "{{DatabaseGateway}}"
+}
+###
+
+### Send POST request with json body for delete category by id
+POST {{FunctionsGateway}}/storage-category-delete
+Content-Type: application/json
+
+{
+  "Language":"{{Language}}",
+  "CategoryID":"{{CategoryID}}",
+  "DatabaseGateway": "{{DatabaseGateway}}"
+}
+###

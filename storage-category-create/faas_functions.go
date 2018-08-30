@@ -20,7 +20,7 @@ type FAASFunctions struct {
 
 func (functions FAASFunctions) ReadCategoriesByName(categoryName, language string) []storage.Category {
 	functionPath := fmt.Sprintf(
-		"%v/%v/%v", functions.FunctionsGateway, "function", "storage-category-read-by-name")
+		"%v/%v", functions.FunctionsGateway, "storage-category-read-by-name")
 
 	body := struct {
 		Language        string
@@ -64,7 +64,7 @@ func (functions FAASFunctions) ReadCategoriesByName(categoryName, language strin
 
 func (functions FAASFunctions) ReadCategoryByID(categoryID, language string) storage.Category {
 	functionPath := fmt.Sprintf(
-		"%v/%v/%v", functions.FunctionsGateway, "function", "storage-category-read-by-id")
+		"%v/%v", functions.FunctionsGateway, "storage-category-read-by-id")
 
 	body := struct {
 		Language        string

@@ -8,7 +8,7 @@ import (
 
 type Request struct {
 	Language        string
-	CompanyID       string
+	CategoryID      string
 	DatabaseGateway string
 }
 
@@ -48,7 +48,7 @@ func Handle(req []byte) string {
 	}
 
 	executor := Executor{Store: &storage.Store{DatabaseGateway: request.DatabaseGateway}}
-	company, err := executor.ReadCategoryByID(request.CompanyID, request.Language)
+	company, err := executor.ReadCategoryByID(request.CategoryID, request.Language)
 	if err != nil {
 		warning := fmt.Sprintf(
 			"ReadCategoryByID error: %v", err)

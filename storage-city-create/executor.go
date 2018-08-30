@@ -9,8 +9,8 @@ import (
 )
 
 type Storage interface {
-	Mutate([]byte) (string, error)
-	SetNQuads(string, string, string) error
+	CreateJSON([]byte) (string, error)
+	AddLanguage(string, string, string) error
 }
 
 type Functions interface {
@@ -50,12 +50,12 @@ func (executor *Executor) CreateCity(city storage.City, language string) (storag
 		return city, ErrCityCanNotBeCreated
 	}
 
-	uidOfCreatedCity, err := executor.Store.Mutate(encodedCity)
+	uidOfCreatedCity, err := executor.Store.CreateJSON(encodedCity)
 	if err != nil {
 		return city, ErrCityCanNotBeCreated
 	}
 
-	err = executor.Store.SetNQuads(uidOfCreatedCity, "cityName", "\""+city.Name+"\""+"@"+language)
+	err = executor.Store.AddLanguage(uidOfCreatedCity, "cityName", "\""+city.Name+"\""+"@"+language)
 	if err != nil {
 		return city, ErrCityCanNotBeCreated
 	}
