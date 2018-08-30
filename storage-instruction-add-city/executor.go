@@ -7,7 +7,7 @@ import (
 )
 
 type Storage interface {
-	SetNQuads(string, string, string) error
+	AddEntityToOtherEntity(string, string, string) error
 }
 
 type Executor struct {
@@ -23,7 +23,7 @@ var (
 
 // AddCityToInstruction method for set quad of predicate about City and Instruction
 func (executor *Executor) AddCityToInstruction(instructionID, cityID string) error {
-	err := executor.Store.SetNQuads(instructionID, "has_city", cityID)
+	err := executor.Store.AddEntityToOtherEntity(instructionID, "has_city", cityID)
 	if err != nil {
 		ExecutorLogger.Printf("City with ID: %v can not be added to instruction with ID: %v", cityID, instructionID)
 		return ErrCityCanNotBeAddedToInstruction
