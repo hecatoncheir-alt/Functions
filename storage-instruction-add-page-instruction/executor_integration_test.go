@@ -15,7 +15,7 @@ import (
 )
 
 func TestExecutor_AddPageInstructionToInstruction(t *testing.T) {
-	//t.Skip("Database must be started")
+	t.Skip("Database must be started")
 
 	DatabaseGateway := os.Getenv("DatabaseGateway")
 	if DatabaseGateway == "" {
