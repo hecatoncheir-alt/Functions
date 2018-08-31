@@ -7,7 +7,6 @@ import (
 )
 
 type Request struct {
-	Language          string
 	PageInstructionID string
 	DatabaseGateway   string
 }
@@ -48,7 +47,7 @@ func Handle(req []byte) string {
 	}
 
 	executor := Executor{Store: &storage.Store{DatabaseGateway: request.DatabaseGateway}}
-	PageInstruction, err := executor.ReadPageInstructionByID(request.PageInstructionID, request.Language)
+	PageInstruction, err := executor.ReadPageInstructionByID(request.PageInstructionID)
 	if err != nil {
 		warning := fmt.Sprintf(
 			"ReadPageInstructionByID error: %v", err)
