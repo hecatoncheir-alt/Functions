@@ -12,7 +12,7 @@ import (
 )
 
 func TestExecutor_ReadInstructionByID(t *testing.T) {
-	//t.Skip("Database must be started")
+	t.Skip("Database must be started")
 
 	DatabaseGateway := os.Getenv("DatabaseGateway")
 	if DatabaseGateway == "" {
