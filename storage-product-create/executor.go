@@ -9,8 +9,8 @@ import (
 )
 
 type Storage interface {
-	Mutate([]byte) (string, error)
-	SetNQuads(string, string, string) error
+	CreateJSON([]byte) (string, error)
+	AddLanguage(string, string, string) error
 }
 
 type Functions interface {
@@ -48,12 +48,12 @@ func (executor *Executor) CreateProduct(product storage.Product, language string
 		return product, ErrProductCanNotBeCreated
 	}
 
-	uidOfCreatedProduct, err := executor.Store.Mutate(encodedProduct)
+	uidOfCreatedProduct, err := executor.Store.CreateJSON(encodedProduct)
 	if err != nil {
 		return product, ErrProductCanNotBeCreated
 	}
 
-	err = executor.Store.SetNQuads(uidOfCreatedProduct, "productName", "\""+product.Name+"\""+"@"+language)
+	err = executor.Store.AddLanguage(uidOfCreatedProduct, "productName", "\""+product.Name+"\""+"@"+language)
 	if err != nil {
 		return product, ErrProductCanNotBeCreated
 	}
