@@ -10,14 +10,19 @@ import (
 	"github.com/hecatoncheir/Storage"
 	"google.golang.org/grpc"
 	"log"
+	"os"
 	"testing"
 	"text/template"
 )
 
 func TestExecutor_DeleteEntityByID(t *testing.T) {
-	//t.Skip("Database must be started")
+	t.Skip("Database must be started")
 
-	DatabaseGateway := "localhost:9080"
+	DatabaseGateway := os.Getenv("DatabaseGateway")
+	if DatabaseGateway == "" {
+		DatabaseGateway = "localhost:9080"
+	}
+
 	databaseClient, err := connectToDatabase(DatabaseGateway)
 	if err != nil {
 		t.Fatalf(err.Error())
