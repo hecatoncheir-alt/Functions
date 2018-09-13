@@ -17,7 +17,9 @@ type Request struct {
 	Instructions Instructions
 }
 
-func Handle(req []byte) int {
+type Response struct{ Message, Data, Error string }
+
+func Handle(req []byte) string {
 	request := Request{}
 
 	err := json.Unmarshal(req, &request)
@@ -35,10 +37,33 @@ func Handle(req []byte) int {
 			err)
 
 		fmt.Println(warning)
+
+		response := Response{
+			Message: warning,
+			Error:   err.Error(),
+		}
+
+		encodedResponse, err := json.Marshal(response)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		return string(encodedResponse)
 	}
 
-	return pagesCount
+	encodedPagesCount, err := json.Marshal(pagesCount)
+	if err != nil {
+		fmt.Println(err)
+	}
 
+	response := Response{Data: string(encodedPagesCount)}
+
+	encodedResponse, err := json.Marshal(response)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return string(encodedResponse)
 }
 
 func getPagesCount(pageIRI string, instructions Instructions) (pagesCount int, err error) {
