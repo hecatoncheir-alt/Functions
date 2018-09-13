@@ -39,7 +39,19 @@ func TestParserCanParsePagesCount(t *testing.T) {
 		t.Errorf(err.Error())
 	}
 
-	pagesCount := Handle(bytes)
+	encodedResponse := Handle(bytes)
+
+	var response Response
+	err = json.Unmarshal([]byte(encodedResponse), &response)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	var pagesCount int
+	err = json.Unmarshal([]byte(response.Data), &pagesCount)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
 
 	expectedPagesCount := 68
 
