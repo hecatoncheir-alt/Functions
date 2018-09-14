@@ -13,15 +13,7 @@ type Request struct {
 	City             storage.City
 }
 
-type ErrorResponse struct {
-	Error string
-	Data  ErrorData
-}
-
-type ErrorData struct {
-	Error   string
-	Request string
-}
+type Response struct{ Message, Data, Error string }
 
 // Handle a serverless request
 func Handle(req []byte) string {
@@ -34,12 +26,7 @@ func Handle(req []byte) string {
 
 		fmt.Println(warning)
 
-		errorResponse := ErrorResponse{
-			Error: "Unmarshal request error",
-			Data: ErrorData{
-				Request: string(req),
-				Error:   err.Error()}}
-
+		errorResponse := Response{Error: err.Error(), Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -61,12 +48,7 @@ func Handle(req []byte) string {
 
 		fmt.Println(warning)
 
-		errorResponse := ErrorResponse{
-			Error: "CreateCity error",
-			Data: ErrorData{
-				Request: string(req),
-				Error:   err.Error()}}
-
+		errorResponse := Response{Error: err.Error(), Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -82,12 +64,7 @@ func Handle(req []byte) string {
 
 		fmt.Println(warning)
 
-		errorResponse := ErrorResponse{
-			Error: "Marshal createdCity error",
-			Data: ErrorData{
-				Request: string(req),
-				Error:   err.Error()}}
-
+		errorResponse := Response{Error: err.Error(), Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -96,5 +73,11 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	return string(encodedCity)
+	response := Response{Data: string(encodedCity)}
+	encodedResponse, err := json.Marshal(response)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return string(encodedResponse)
 }
