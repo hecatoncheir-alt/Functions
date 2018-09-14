@@ -1,6 +1,14 @@
 [[constraint]]
   branch = "master"
+  name = "github.com/dgraph-io/dgo"
+
+[[constraint]]
+  branch = "master"
   name = "github.com/hecatoncheir/Storage"
+
+[[constraint]]
+  name = "google.golang.org/grpc"
+  version = "1.14.0"
 
 [prune]
   go-tests = true

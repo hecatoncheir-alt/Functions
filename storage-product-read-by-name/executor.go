@@ -30,6 +30,7 @@ var (
 
 // ReadProductsByName is a method for get all nodes by product name
 func (executor *Executor) ReadProductsByName(productName, language string) ([]storage.Product, error) {
+
 	variables := struct {
 		ProductName string
 		Language    string

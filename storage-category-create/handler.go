@@ -7,21 +7,13 @@ import (
 )
 
 type Request struct {
-	Language         string
-	DatabaseGateway  string
+	Language,
+	DatabaseGateway,
 	FunctionsGateway string
-	Category         storage.Category
+	Category storage.Category
 }
 
-type ErrorResponse struct {
-	Error string
-	Data  ErrorData
-}
-
-type ErrorData struct {
-	Error   string
-	Request string
-}
+type Response struct{ Message, Data, Error string }
 
 // Handle a serverless request
 func Handle(req []byte) string {
@@ -34,12 +26,7 @@ func Handle(req []byte) string {
 
 		fmt.Println(warning)
 
-		errorResponse := ErrorResponse{
-			Error: "Unmarshal request error",
-			Data: ErrorData{
-				Request: string(req),
-				Error:   err.Error()}}
-
+		errorResponse := Response{Error: err.Error(), Message: warning, Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -61,12 +48,7 @@ func Handle(req []byte) string {
 
 		fmt.Println(warning)
 
-		errorResponse := ErrorResponse{
-			Error: "CreateCategory error",
-			Data: ErrorData{
-				Request: string(req),
-				Error:   err.Error()}}
-
+		errorResponse := Response{Error: err.Error(), Message: warning, Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -82,12 +64,7 @@ func Handle(req []byte) string {
 
 		fmt.Println(warning)
 
-		errorResponse := ErrorResponse{
-			Error: "Marshal created category error",
-			Data: ErrorData{
-				Request: string(req),
-				Error:   err.Error()}}
-
+		errorResponse := Response{Error: err.Error(), Message: warning, Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)

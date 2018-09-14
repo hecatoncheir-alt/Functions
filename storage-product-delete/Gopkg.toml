@@ -1,0 +1,7 @@
+[[constraint]]
+  branch = "master"
+  name = "github.com/hecatoncheir/Storage"
+
+[prune]
+  go-tests = true
+  unused-packages = true

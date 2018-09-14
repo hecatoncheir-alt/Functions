@@ -43,13 +43,22 @@ func TestParserCanParsePage(t *testing.T) {
 		t.Errorf(err.Error())
 	}
 
-	response := Handle(bytes)
+	encodedResponse := Handle(bytes)
 
-	var listOfProducts []Product
-	err = json.Unmarshal([]byte(response), &listOfProducts)
+	response := Response{}
+
+	err = json.Unmarshal([]byte(encodedResponse), &response)
 	if err != nil {
 		t.Errorf(err.Error())
 	}
+
+	if response.Error != "" {
+		t.Errorf(response.Error)
+	}
+
+	var listOfProducts []Product
+
+	json.Unmarshal([]byte(response.Data), &listOfProducts)
 
 	expectedLengthOfProductsList := 12
 

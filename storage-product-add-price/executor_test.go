@@ -24,7 +24,7 @@ type MockStorage struct {
 	DatabaseGateway string
 }
 
-func (store MockStorage) SetNQuads(subject, predicate, object string) error {
+func (store MockStorage) AddEntityToOtherEntity(subject, predicate, object string) error {
 	return nil
 }
 
@@ -47,7 +47,7 @@ type AddPriceToProductErrorMockStorage struct {
 	DatabaseGateway string
 }
 
-func (store AddPriceToProductErrorMockStorage) SetNQuads(subject, predicate, object string) error {
+func (store AddPriceToProductErrorMockStorage) AddEntityToOtherEntity(subject, predicate, object string) error {
 	var status error
 
 	if predicate == "has_price" {
@@ -76,7 +76,7 @@ type AddProductToPriceErrorMockStorage struct {
 	DatabaseGateway string
 }
 
-func (store AddProductToPriceErrorMockStorage) SetNQuads(subject, predicate, object string) error {
+func (store AddProductToPriceErrorMockStorage) AddEntityToOtherEntity(subject, predicate, object string) error {
 	var status error
 
 	if predicate == "belongs_to_product" {

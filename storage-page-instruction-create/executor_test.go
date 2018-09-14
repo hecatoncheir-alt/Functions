@@ -42,12 +42,8 @@ type MockStorage struct {
 	DatabaseGateway string
 }
 
-func (store MockStorage) Mutate(setJson []byte) (uid string, err error) {
+func (store MockStorage) CreateJSON(setJson []byte) (uid string, err error) {
 	return "0x12", nil
-}
-
-func (store MockStorage) SetNQuads(subject, predicate, object string) error {
-	return nil
 }
 
 // --------------------------------------------------------------------------------------------------------
@@ -69,10 +65,6 @@ type ErrorMockStorage struct {
 	DatabaseGateway string
 }
 
-func (store ErrorMockStorage) Mutate(setJson []byte) (uid string, err error) {
+func (store ErrorMockStorage) CreateJSON(setJson []byte) (uid string, err error) {
 	return "", errors.New("")
-}
-
-func (store ErrorMockStorage) SetNQuads(subject, predicate, object string) error {
-	return nil
 }

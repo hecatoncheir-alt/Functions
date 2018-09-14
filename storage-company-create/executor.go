@@ -9,8 +9,8 @@ import (
 )
 
 type Storage interface {
-	Mutate([]byte) (string, error)
-	SetNQuads(string, string, string) error
+	CreateJSON([]byte) (string, error)
+	AddLanguage(string, string, string) error
 }
 
 type Functions interface {
@@ -50,12 +50,12 @@ func (executor *Executor) CreateCompany(company storage.Company, language string
 		return company, ErrCompanyCanNotBeCreated
 	}
 
-	uidOfCreatedCompany, err := executor.Store.Mutate(encodedCompany)
+	uidOfCreatedCompany, err := executor.Store.CreateJSON(encodedCompany)
 	if err != nil {
 		return company, ErrCompanyCanNotBeCreated
 	}
 
-	err = executor.Store.SetNQuads(uidOfCreatedCompany, "companyName", "\""+company.Name+"\""+"@"+language)
+	err = executor.Store.AddLanguage(uidOfCreatedCompany, "companyName", "\""+company.Name+"\""+"@"+language)
 	if err != nil {
 		return company, ErrCompanyCanNotBeCreated
 	}

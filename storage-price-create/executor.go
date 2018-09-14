@@ -9,7 +9,7 @@ import (
 )
 
 type Storage interface {
-	Mutate([]byte) (string, error)
+	CreateJSON([]byte) (string, error)
 }
 
 type Functions interface {
@@ -38,7 +38,7 @@ func (executor *Executor) CreatePrice(price storage.Price, language string) (sto
 		return price, ErrPriceCanNotBeCreated
 	}
 
-	uidOfCreatedPrice, err := executor.Store.Mutate(encodedProduct)
+	uidOfCreatedPrice, err := executor.Store.CreateJSON(encodedProduct)
 	if err != nil {
 		return price, ErrPriceCanNotBeCreated
 	}

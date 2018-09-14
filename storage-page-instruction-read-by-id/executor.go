@@ -32,7 +32,7 @@ var (
 )
 
 // ReadPageInstructionByID is a method for get all nodes of instructions by ID
-func (executor *Executor) ReadPageInstructionByID(pageInstructionID, language string) (storage.PageInstruction, error) {
+func (executor *Executor) ReadPageInstructionByID(pageInstructionID string) (storage.PageInstruction, error) {
 
 	if pageInstructionID == "" {
 		ExecutorLogger.Printf("Page pageInstruction can't be without ID")
@@ -41,10 +41,8 @@ func (executor *Executor) ReadPageInstructionByID(pageInstructionID, language st
 
 	variables := struct {
 		PageInstructionID string
-		Language          string
 	}{
-		PageInstructionID: pageInstructionID,
-		Language:          language}
+		PageInstructionID: pageInstructionID}
 
 	queryTemplate, err := template.New("ReadPageInstructionByID").Parse(`{
 				pageInstructions(func: uid("{{.PageInstructionID}}")) @filter(has(path)) {

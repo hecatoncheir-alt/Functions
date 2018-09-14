@@ -11,7 +11,7 @@ func TestPageInstructionCanBeReadByID(t *testing.T) {
 
 	executor := Executor{Store: MockStore{}}
 
-	pageInstructionFromStore, err := executor.ReadPageInstructionByID(IDOfTestedPageInstruction, "ru")
+	pageInstructionFromStore, err := executor.ReadPageInstructionByID(IDOfTestedPageInstruction)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
@@ -52,7 +52,7 @@ func TestPageInstructionCanBeReadByIDWithError(t *testing.T) {
 	IDOfTestedPageInstruction := "0x12"
 
 	executor := Executor{Store: ErrorMockStore{}}
-	_, err := executor.ReadPageInstructionByID(IDOfTestedPageInstruction, "ru")
+	_, err := executor.ReadPageInstructionByID(IDOfTestedPageInstruction)
 	if err != ErrPageInstructionByIDCanNotBeFound {
 		t.Fatalf(err.Error())
 	}
@@ -72,7 +72,7 @@ func TestPageInstructionCanBeReadByIDAndItCanBeEmpty(t *testing.T) {
 	IDOfTestedPageInstruction := "0x12"
 
 	executor := Executor{Store: EmptyMockStore{}}
-	_, err := executor.ReadPageInstructionByID(IDOfTestedPageInstruction, "ru")
+	_, err := executor.ReadPageInstructionByID(IDOfTestedPageInstruction)
 	if err != ErrPageInstructionDoesNotExist {
 		t.Fatalf(err.Error())
 	}

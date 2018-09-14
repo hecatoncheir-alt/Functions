@@ -47,7 +47,7 @@ func (executor *Executor) ReadInstructionByID(instructionID, language string) (s
 		Language:      language}
 
 	queryTemplate, err := template.New("ReadInstructionByID").Parse(`{
-				instructions(func: uid("{{.InstructionID}}")) @filter(has(instructionLanguage)) {
+				instructions(func: uid("{{.InstructionID}}")) @filter(eq(instructionLanguage, {{.Language}})) {
 					uid
 					instructionLanguage
 					instructionIsActive

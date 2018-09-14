@@ -24,6 +24,8 @@ type Request struct {
 	Instructions Instructions
 }
 
+type Response struct{ Error, Data, Message string }
+
 func Handle(req []byte) string {
 	request := Request{}
 
@@ -43,35 +45,43 @@ func Handle(req []byte) string {
 
 		fmt.Println(warning)
 
-		encodedWarning, err := json.Marshal(struct {
-			Error string
-		}{
-			Error: warning})
+		encodedResponse := Response{
+			Message: warning,
+			Data:    string(req),
+			Error:   err.Error()}
 
+		response, err := json.Marshal(encodedResponse)
 		if err != nil {
-			fmt.Println(err)
-			return err.Error()
+			fmt.Println(err.Error())
 		}
 
-		return string(encodedWarning)
+		return string(response)
 	}
 
 	encodedProductsFromPage, err := json.Marshal(productsFromPage)
 	if err != nil {
-		encodedWarning, err := json.Marshal(struct {
-			Error string
-		}{
-			Error: err.Error()})
+		encodedResponse := Response{
+			Data:  string(req),
+			Error: err.Error()}
 
+		response, err := json.Marshal(encodedResponse)
 		if err != nil {
-			fmt.Println(err)
-			return err.Error()
+			fmt.Println(err.Error())
 		}
 
-		return string(encodedWarning)
+		return string(response)
 	}
 
-	return string(encodedProductsFromPage)
+	fmt.Println(string(encodedProductsFromPage))
+
+	encodedResponse := Response{Data: string(encodedProductsFromPage)}
+
+	response, err := json.Marshal(encodedResponse)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	return string(response)
 }
 
 type Price struct {

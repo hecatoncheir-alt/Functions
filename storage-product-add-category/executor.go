@@ -7,7 +7,7 @@ import (
 )
 
 type Storage interface {
-	SetNQuads(string, string, string) error
+	AddEntityToOtherEntity(string, string, string) error
 }
 
 type Executor struct {
@@ -26,13 +26,13 @@ var (
 
 // AddCategoryToProduct method for set quad of predicate about product and category
 func (executor *Executor) AddCategoryToProduct(productID, categoryID string) error {
-	err := executor.Store.SetNQuads(categoryID, "has_product", productID)
+	err := executor.Store.AddEntityToOtherEntity(categoryID, "has_product", productID)
 	if err != nil {
 		ExecutorLogger.Printf("Product with ID: %v can not be added to category with ID: %v", productID, categoryID)
 		return ErrProductCanNotBeAddedToCategory
 	}
 
-	err = executor.Store.SetNQuads(productID, "belongs_to_category", categoryID)
+	err = executor.Store.AddEntityToOtherEntity(productID, "belongs_to_category", categoryID)
 	if err != nil {
 		ExecutorLogger.Printf("Category with ID: %v can not be added to product with ID: %v", categoryID, productID)
 		return ErrCategoryCanNotBeAddedToProduct

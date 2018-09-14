@@ -20,7 +20,7 @@ type FAASFunctions struct {
 
 func (functions FAASFunctions) ReadPriceByID(priceID, language string) storage.Price {
 	functionPath := fmt.Sprintf(
-		"%v/%v/%v", functions.FunctionsGateway, "function", "storage-price-read-by-id")
+		"%v/%v", functions.FunctionsGateway, "storage-price-read-by-id")
 
 	body := struct {
 		Language        string
