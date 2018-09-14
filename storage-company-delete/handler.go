@@ -6,24 +6,8 @@ import (
 	"github.com/hecatoncheir/Storage"
 )
 
-type Request struct {
-	CompanyID       string
-	DatabaseGateway string
-}
-
-type ErrorResponse struct {
-	Error string
-	Data  ErrorData
-}
-
-type ErrorData struct {
-	Error   string
-	Request string
-}
-
-type NoErrorResponse struct {
-	Error string
-}
+type Request struct{ CompanyID, DatabaseGateway string }
+type Response struct{ Message, Data, Error string }
 
 // Handle a serverless request
 func Handle(req []byte) string {
@@ -36,12 +20,7 @@ func Handle(req []byte) string {
 
 		fmt.Println(warning)
 
-		errorResponse := ErrorResponse{
-			Error: "Unmarshal request error",
-			Data: ErrorData{
-				Request: string(req),
-				Error:   err.Error()}}
-
+		errorResponse := Response{Data: string(req), Error: err.Error()}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -58,12 +37,7 @@ func Handle(req []byte) string {
 
 		fmt.Println(warning)
 
-		errorResponse := ErrorResponse{
-			Error: "DeleteCompanyByID error",
-			Data: ErrorData{
-				Request: string(req),
-				Error:   err.Error()}}
-
+		errorResponse := Response{Data: string(req), Error: err.Error()}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -72,12 +46,11 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	noErrorResponse := NoErrorResponse{Error: ""}
-
-	encodedNoErrorResponse, err := json.Marshal(noErrorResponse)
+	response := Response{}
+	encodedResponse, err := json.Marshal(response)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	return string(encodedNoErrorResponse)
+	return string(encodedResponse)
 }
