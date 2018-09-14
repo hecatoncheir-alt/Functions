@@ -46,11 +46,11 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	errorResponse := Response{Data: string(req)}
-	response, err := json.Marshal(errorResponse)
+	response := Response{Data: string(req)}
+	encodedResponse, err := json.Marshal(response)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	return string(response)
+	return string(encodedResponse)
 }
