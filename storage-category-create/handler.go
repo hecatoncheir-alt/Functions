@@ -73,5 +73,11 @@ func Handle(req []byte) string {
 		return string(response)
 	}
 
-	return string(encodedCompany)
+	response := Response{Data: string(encodedCompany)}
+	encodedResponse, err := json.Marshal(response)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return string(encodedResponse)
 }
