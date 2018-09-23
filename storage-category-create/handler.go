@@ -24,8 +24,6 @@ func Handle(req []byte) string {
 		warning := fmt.Sprintf(
 			"Unmarshal request error: %v. Error: %v", request, err)
 
-		fmt.Println(warning)
-
 		errorResponse := Response{Error: err.Error(), Message: warning, Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
@@ -46,8 +44,6 @@ func Handle(req []byte) string {
 		warning := fmt.Sprintf(
 			"CreateCategory error: %v", err)
 
-		fmt.Println(warning)
-
 		errorResponse := Response{Error: err.Error(), Message: warning, Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
@@ -61,8 +57,6 @@ func Handle(req []byte) string {
 	if err != nil {
 		warning := fmt.Sprintf(
 			"Marshal category error: %v. Error: %v", createdCompany, err)
-
-		fmt.Println(warning)
 
 		errorResponse := Response{Error: err.Error(), Message: warning, Data: string(req)}
 		response, err := json.Marshal(errorResponse)
