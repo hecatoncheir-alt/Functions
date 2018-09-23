@@ -13,7 +13,7 @@ import (
 )
 
 func TestExecutor_ReadCategoryByID(t *testing.T) {
-	//t.Skip("Database must be started")
+	t.Skip("Database must be started")
 
 	DatabaseGateway := os.Getenv("DatabaseGateway")
 	if DatabaseGateway == "" {
