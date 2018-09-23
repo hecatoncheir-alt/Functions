@@ -51,9 +51,16 @@ func (functions FAASFunctions) ReadCategoriesByName(categoryName, language strin
 		return nil
 	}
 
+	encodedResponse := Response{}
+	err = json.Unmarshal(decodedResponse, &encodedResponse)
+	if err != nil {
+		FAASLogger.Println(err)
+		return nil
+	}
+
 	var existCategories []storage.Category
 
-	err = json.Unmarshal(decodedResponse, &existCategories)
+	err = json.Unmarshal([]byte(encodedResponse.Data), &existCategories)
 	if err != nil {
 		FAASLogger.Println(err)
 		return nil

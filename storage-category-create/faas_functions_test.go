@@ -56,7 +56,14 @@ func TestFAASFunctions_ReadCategoriesByName(t *testing.T) {
 			t.Error(err.Error())
 		}
 
-		_, err = io.WriteString(w, string(encodedExistedCategoriesInStorage))
+		response := Response{Data: string(encodedExistedCategoriesInStorage)}
+
+		encodedResponse, err := json.Marshal(response)
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		_, err = io.WriteString(w, string(encodedResponse))
 		if err != nil {
 			t.Error(err.Error())
 		}
