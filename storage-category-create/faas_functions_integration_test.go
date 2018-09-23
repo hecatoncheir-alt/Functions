@@ -17,12 +17,12 @@ func TestIntegration_FAASFunctions(t *testing.T) {
 
 	DatabaseGateway := os.Getenv("DatabaseGateway")
 	if DatabaseGateway == "" {
-		DatabaseGateway = "192.168.99.100:31285"
+		DatabaseGateway = "192.168.99.101:31332"
 	}
 
 	FunctionsGateway := os.Getenv("FunctionsGateway")
 	if FunctionsGateway == "" {
-		FunctionsGateway = "http://192.168.99.100:31112/function"
+		FunctionsGateway = "http://192.168.99.101:31112/function"
 	}
 
 	databaseClient, err := connectToDatabase(DatabaseGateway)
@@ -38,6 +38,9 @@ func TestIntegration_FAASFunctions(t *testing.T) {
 	`
 
 	err = setUpSchema(schema, databaseClient)
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
 
 	CategoryName := "Test category name"
 
@@ -76,11 +79,11 @@ func TestIntegration_FAASFunctions(t *testing.T) {
 
 	foundedCategory := executor.Functions.ReadCategoryByID(createdCategoryID, Language)
 
-	if foundedCategory.ID == createdCategoryID {
+	if foundedCategory.ID != createdCategoryID {
 		t.Fatalf("Created category: %v by id not found", createdCategoryID)
 	}
 
-	if foundedCategory.Name == CategoryName {
+	if foundedCategory.Name != CategoryName {
 		t.Fatalf("Created category: %v by name not found", CategoryName)
 	}
 
@@ -90,11 +93,11 @@ func TestIntegration_FAASFunctions(t *testing.T) {
 		t.Fatalf("No one category by name: %v found in database", CategoryName)
 	}
 
-	if foundedCategories[0].ID == createdCategoryID {
+	if foundedCategories[0].ID != createdCategoryID {
 		t.Fatalf("Created category: %v by id not found", createdCategoryID)
 	}
 
-	if foundedCategories[0].Name == CategoryName {
+	if foundedCategories[0].Name != CategoryName {
 		t.Fatalf("Created category: %v by name not found", CategoryName)
 	}
 }

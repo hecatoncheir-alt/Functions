@@ -12,12 +12,12 @@ func TestIntegration_Executor(t *testing.T) {
 
 	DatabaseGateway := os.Getenv("DatabaseGateway")
 	if DatabaseGateway == "" {
-		DatabaseGateway = "192.168.99.100:31285"
+		DatabaseGateway = "192.168.99.101:31332"
 	}
 
 	FunctionsGateway := os.Getenv("FunctionsGateway")
 	if FunctionsGateway == "" {
-		FunctionsGateway = "http://192.168.99.100:31112/function"
+		FunctionsGateway = "http://192.168.99.101:31112/function"
 	}
 
 	databaseClient, err := connectToDatabase(DatabaseGateway)
@@ -71,11 +71,11 @@ func TestIntegration_Executor(t *testing.T) {
 
 	foundedCategory := executor.Functions.ReadCategoryByID(createdCategory.ID, Language)
 
-	if foundedCategory.ID == createdCategory.ID {
+	if foundedCategory.ID != createdCategory.ID {
 		t.Fatalf("Created category: %v by id not found", createdCategory.ID)
 	}
 
-	if foundedCategory.Name == CategoryName {
+	if foundedCategory.Name != CategoryName {
 		t.Fatalf("Created category: %v by name not found", CategoryName)
 	}
 
@@ -85,11 +85,11 @@ func TestIntegration_Executor(t *testing.T) {
 		t.Fatalf("No one category by name: %v found in database", CategoryName)
 	}
 
-	if foundedCategories[0].ID == createdCategory.ID {
+	if foundedCategories[0].ID != createdCategory.ID {
 		t.Fatalf("Created category: %v by id not found", createdCategory.ID)
 	}
 
-	if foundedCategories[0].Name == CategoryName {
+	if foundedCategories[0].Name != CategoryName {
 		t.Fatalf("Created category: %v by name not found", CategoryName)
 	}
 }

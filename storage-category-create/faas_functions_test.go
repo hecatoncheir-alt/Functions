@@ -111,17 +111,24 @@ func TestFAASFunctions_ReadCategoryByID(t *testing.T) {
 				"Expected: \"%v\", but got: %v", DatabaseGatewayForTest, responseBodyEncoded["DatabaseGateway"])
 		}
 
-		existedCategoriesInStorage := storage.Category{
+		existedCategoryInStorage := storage.Category{
 			ID:       "0x12",
 			Name:     "Test category name",
 			IsActive: true}
 
-		encodedExistedCategoriesInStorage, err := json.Marshal(existedCategoriesInStorage)
+		encodedExistedCategoryInStorage, err := json.Marshal(existedCategoryInStorage)
 		if err != nil {
 			t.Error(err.Error())
 		}
 
-		_, err = io.WriteString(w, string(encodedExistedCategoriesInStorage))
+		response := Response{Data: string(encodedExistedCategoryInStorage)}
+
+		encodedResponse, err := json.Marshal(response)
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		_, err = io.WriteString(w, string(encodedResponse))
 		if err != nil {
 			t.Error(err.Error())
 		}

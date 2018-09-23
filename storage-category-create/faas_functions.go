@@ -102,9 +102,16 @@ func (functions FAASFunctions) ReadCategoryByID(categoryID, language string) sto
 		return storage.Category{}
 	}
 
+	encodedResponse := Response{}
+	err = json.Unmarshal(decodedResponse, &encodedResponse)
+	if err != nil {
+		FAASLogger.Println(err)
+		return storage.Category{}
+	}
+
 	var existCategory storage.Category
 
-	err = json.Unmarshal(decodedResponse, &existCategory)
+	err = json.Unmarshal([]byte(encodedResponse.Data), &existCategory)
 	if err != nil {
 		FAASLogger.Println(err)
 		return storage.Category{}
