@@ -11,6 +11,7 @@ import (
 	"github.com/hecatoncheir/Storage"
 	"google.golang.org/grpc"
 	"log"
+	"os"
 	"testing"
 	"text/template"
 )
@@ -18,7 +19,11 @@ import (
 func TestExecutor_DeleteCategoryByID(t *testing.T) {
 	t.Skip("Database must be started")
 
-	DatabaseGateway := "localhost:9080"
+	DatabaseGateway := os.Getenv("DatabaseGateway")
+	if DatabaseGateway == "" {
+		DatabaseGateway = "192.168.99.101:31332"
+	}
+
 	databaseClient, err := connectToDatabase(DatabaseGateway)
 	if err != nil {
 		t.Fatalf(err.Error())
