@@ -6,12 +6,7 @@ import (
 	"github.com/hecatoncheir/Storage"
 )
 
-type Request struct {
-	Language        string
-	CategoryName    string
-	DatabaseGateway string
-}
-
+type Request struct{ Language, CategoryName, DatabaseGateway string }
 type Response struct{ Message, Data, Error string }
 
 // Handle a serverless request
@@ -23,9 +18,7 @@ func Handle(req []byte) string {
 		warning := fmt.Sprintf(
 			"Unmarshal request error: %v. Error: %v", request, err)
 
-		fmt.Println(warning)
-
-		errorResponse := Response{Error: err.Error(), Data: string(req)}
+		errorResponse := Response{Message: warning, Error: err.Error(), Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -40,9 +33,7 @@ func Handle(req []byte) string {
 		warning := fmt.Sprintf(
 			"ReadCategoriesByName error: %v", err)
 
-		fmt.Println(warning)
-
-		errorResponse := Response{Error: err.Error(), Data: string(req)}
+		errorResponse := Response{Message: warning, Error: err.Error(), Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -56,9 +47,7 @@ func Handle(req []byte) string {
 		warning := fmt.Sprintf(
 			"Unmarshal categories error: %v. Error: %v", categories, err)
 
-		fmt.Println(warning)
-
-		errorResponse := Response{Error: err.Error(), Data: string(req)}
+		errorResponse := Response{Message: warning, Error: err.Error(), Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
