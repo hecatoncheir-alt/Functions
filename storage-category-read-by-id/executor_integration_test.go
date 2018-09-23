@@ -8,13 +8,18 @@ import (
 	dataBaseAPI "github.com/dgraph-io/dgo/protos/api"
 	"github.com/hecatoncheir/Storage"
 	"google.golang.org/grpc"
+	"os"
 	"testing"
 )
 
 func TestExecutor_ReadCategoryByID(t *testing.T) {
-	t.Skip("Database must be started")
+	//t.Skip("Database must be started")
 
-	DatabaseGateway := "localhost:9080"
+	DatabaseGateway := os.Getenv("DatabaseGateway")
+	if DatabaseGateway == "" {
+		DatabaseGateway = "192.168.99.101:31332"
+	}
+
 	databaseClient, err := connectToDatabase(DatabaseGateway)
 	if err != nil {
 		t.Fatalf(err.Error())

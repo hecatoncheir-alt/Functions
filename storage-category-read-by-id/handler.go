@@ -7,7 +7,6 @@ import (
 )
 
 type Request struct{ Language, CategoryID, DatabaseGateway string }
-
 type Response struct{ Message, Error, Data string }
 
 // Handle a serverless request
@@ -18,8 +17,6 @@ func Handle(req []byte) string {
 	if err != nil {
 		warning := fmt.Sprintf(
 			"Unmarshal request error: %v. Error: %v", request, err)
-
-		fmt.Println(warning)
 
 		errorResponse := Response{Error: err.Error(), Message: warning, Data: string(req)}
 		response, err := json.Marshal(errorResponse)
@@ -36,8 +33,6 @@ func Handle(req []byte) string {
 		warning := fmt.Sprintf(
 			"ReadCategoryByID error: %v", err)
 
-		fmt.Println(warning)
-
 		errorResponse := Response{Error: err.Error(), Message: warning, Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
@@ -51,8 +46,6 @@ func Handle(req []byte) string {
 	if err != nil {
 		warning := fmt.Sprintf(
 			"Unmarshal category error: %v. Error: %v", company, err)
-
-		fmt.Println(warning)
 
 		errorResponse := Response{Error: err.Error(), Message: warning, Data: string(req)}
 		response, err := json.Marshal(errorResponse)
