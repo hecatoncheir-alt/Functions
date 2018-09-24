@@ -11,21 +11,16 @@ import (
 	"os"
 )
 
-var FAASLogger = log.New(os.Stdout, "FAASFunctions: ", log.Lshortfile)
+var logger = log.New(os.Stdout, "FAASFunctions: ", log.Lshortfile)
 
-type FAASFunctions struct {
-	FunctionsGateway string
-	DatabaseGateway  string
-}
+type FAASFunctions struct{ FunctionsGateway, DatabaseGateway string }
 
 func (functions FAASFunctions) ReadCitiesByName(cityName, language string) []storage.City {
 	functionPath := fmt.Sprintf(
 		"%v/%v", functions.FunctionsGateway, "storage-city-read-by-name")
 
 	body := struct {
-		Language        string
-		CityName        string
-		DatabaseGateway string
+		Language, CityName, DatabaseGateway string
 	}{
 		Language:        language,
 		CityName:        cityName,
@@ -33,29 +28,42 @@ func (functions FAASFunctions) ReadCitiesByName(cityName, language string) []sto
 
 	encodedBody, err := json.Marshal(body)
 	if err != nil {
-		FAASLogger.Println(err)
+		logger.Println(err)
 		return nil
 	}
 
-	response, err := http.Post(functionPath, "application/json", bytes.NewBuffer(encodedBody))
+	responseWithEncodedBody, err := http.Post(functionPath, "application/json", bytes.NewBuffer(encodedBody))
 	if err != nil {
-		FAASLogger.Println(err)
+		logger.Println(err)
 		return nil
 	}
 
-	defer response.Body.Close()
+	defer responseWithEncodedBody.Body.Close()
 
-	decodedResponse, err := ioutil.ReadAll(response.Body)
+	decodedResponse, err := ioutil.ReadAll(responseWithEncodedBody.Body)
 	if err != nil {
-		FAASLogger.Println(err)
+		logger.Println(err)
+		return nil
+	}
+
+	response := Response{}
+
+	err = json.Unmarshal([]byte(decodedResponse), &response)
+	if err != nil {
+		logger.Println(err)
+		return nil
+	}
+
+	if response.Error != "" {
+		logger.Println(err)
 		return nil
 	}
 
 	var existCities []storage.City
 
-	err = json.Unmarshal(decodedResponse, &existCities)
+	err = json.Unmarshal([]byte(response.Data), &existCities)
 	if err != nil {
-		FAASLogger.Println(err)
+		logger.Println(err)
 		return nil
 	}
 
@@ -77,29 +85,42 @@ func (functions FAASFunctions) ReadCityByID(cityID, language string) storage.Cit
 
 	encodedBody, err := json.Marshal(body)
 	if err != nil {
-		FAASLogger.Println(err)
+		logger.Println(err)
 		return storage.City{}
 	}
 
-	response, err := http.Post(functionPath, "application/json", bytes.NewBuffer(encodedBody))
+	responseWithEncodedBody, err := http.Post(functionPath, "application/json", bytes.NewBuffer(encodedBody))
 	if err != nil {
-		FAASLogger.Println(err)
+		logger.Println(err)
 		return storage.City{}
 	}
 
-	defer response.Body.Close()
+	defer responseWithEncodedBody.Body.Close()
 
-	decodedResponse, err := ioutil.ReadAll(response.Body)
+	decodedResponse, err := ioutil.ReadAll(responseWithEncodedBody.Body)
 	if err != nil {
-		FAASLogger.Println(err)
+		logger.Println(err)
+		return storage.City{}
+	}
+
+	response := Response{}
+
+	err = json.Unmarshal(decodedResponse, &response)
+	if err != nil {
+		logger.Println(err)
+		return storage.City{}
+	}
+
+	if response.Error != "" {
+		logger.Println(err)
 		return storage.City{}
 	}
 
 	var existCity storage.City
 
-	err = json.Unmarshal(decodedResponse, &existCity)
+	err = json.Unmarshal([]byte(response.Data), &existCity)
 	if err != nil {
-		FAASLogger.Println(err)
+		logger.Println(err)
 		return storage.City{}
 	}
 

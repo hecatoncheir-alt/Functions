@@ -51,12 +51,19 @@ func TestFAASFunctions_ReadCitiesByName(t *testing.T) {
 				Name:     "Other test city name",
 				IsActive: true}}
 
-		encodedExisteitiesInStorage, err := json.Marshal(existedCitiesInStorage)
+		encodedExistedCitiesInStorage, err := json.Marshal(existedCitiesInStorage)
 		if err != nil {
 			t.Error(err.Error())
 		}
 
-		_, err = io.WriteString(w, string(encodedExisteitiesInStorage))
+		response := Response{Data: string(encodedExistedCitiesInStorage)}
+
+		encodedResponse, err := json.Marshal(response)
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		_, err = io.WriteString(w, string(encodedResponse))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -113,7 +120,14 @@ func TestFAASFunctions_ReadCompanyByID(t *testing.T) {
 			t.Error(err.Error())
 		}
 
-		_, err = io.WriteString(w, string(encodedExistedCityInStorage))
+		response := Response{Data: string(encodedExistedCityInStorage)}
+
+		encodedResponse, err := json.Marshal(response)
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		_, err = io.WriteString(w, string(encodedResponse))
 		if err != nil {
 			t.Error(err.Error())
 		}

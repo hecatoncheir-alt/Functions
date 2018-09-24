@@ -7,10 +7,10 @@ import (
 )
 
 type Request struct {
-	Language         string
-	DatabaseGateway  string
+	Language,
+	DatabaseGateway,
 	FunctionsGateway string
-	City             storage.City
+	City storage.City
 }
 
 type Response struct{ Message, Data, Error string }
@@ -24,9 +24,7 @@ func Handle(req []byte) string {
 		warning := fmt.Sprintf(
 			"Unmarshal request error: %v. Error: %v", request, err)
 
-		fmt.Println(warning)
-
-		errorResponse := Response{Error: err.Error(), Data: string(req)}
+		errorResponse := Response{Message: warning, Error: err.Error(), Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -46,9 +44,7 @@ func Handle(req []byte) string {
 		warning := fmt.Sprintf(
 			"CreateCity error: %v", err)
 
-		fmt.Println(warning)
-
-		errorResponse := Response{Error: err.Error(), Data: string(req)}
+		errorResponse := Response{Message: warning, Error: err.Error(), Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
@@ -62,9 +58,7 @@ func Handle(req []byte) string {
 		warning := fmt.Sprintf(
 			"Marshal city error: %v. Error: %v", createdCity, err)
 
-		fmt.Println(warning)
-
-		errorResponse := Response{Error: err.Error(), Data: string(req)}
+		errorResponse := Response{Message: warning, Error: err.Error(), Data: string(req)}
 		response, err := json.Marshal(errorResponse)
 		if err != nil {
 			fmt.Println(err)
